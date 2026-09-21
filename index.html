@@ -4,274 +4,4291 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f9d9a">
-<meta name="description" content="羽智｜AI羽毛球助手">
+<meta name="description" content="羽智｜AI羽毛球助手：AI问答、比赛复盘、视频姿态分析、中羽等级估算、训练计划。">
 <title>羽智｜AI羽毛球助手</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/pose.js" crossorigin="anonymous"></script>
+
 <style>
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:#f5f8fa;color:#263238}
-button,input,select,textarea{font:inherit}button{cursor:pointer}.app{min-height:100vh}
-header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(15px);border-bottom:1px solid #dceff0}
-.header-inner{max-width:1100px;margin:auto;padding:12px 16px}.logo{font-size:22px;font-weight:900;color:#0f8f8c}
-.nav{display:flex;gap:5px;overflow-x:auto;margin-top:10px}.nav button{border:0;background:transparent;color:#607d8b;padding:9px 12px;border-radius:11px;white-space:nowrap}.nav button.active,.nav button:hover{background:#e7f8f7;color:#0f8f8c}
-main{max-width:1100px;margin:auto}.page{display:none;padding:20px 16px 80px}.page.active{display:block}
-.hero{text-align:center;padding:42px 15px 25px}.badge{display:inline-block;padding:7px 13px;border-radius:999px;background:#e6f8f7;color:#0f8f8c;font-size:13px;font-weight:700}.hero h1{margin:18px 0 10px;font-size:38px}.hero p{max-width:760px;margin:auto;line-height:1.8;color:#607d8b}
-.actions,.video-buttons{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:22px}.primary,.secondary,.danger{border-radius:12px;padding:12px 18px;border:0}.primary{background:#0f9d9a;color:#fff}.secondary{background:#fff;border:1px solid #bde5e4;color:#0f8f8c}.danger{background:#fff0f0;color:#c62828}.primary:disabled{opacity:.5}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:10px 0 25px}.stat{background:#fff;border:1px solid #dceff0;border-radius:16px;padding:18px 10px;text-align:center}.stat strong{display:block;font-size:24px;color:#0f9d9a;margin-bottom:5px}
-.panel{background:#fff;border:1px solid #dceff0;border-radius:18px;padding:22px;margin:18px 0;box-shadow:0 5px 22px rgba(0,0,0,.035)}.panel h2{margin-top:0}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-label{display:block;color:#607d8b;font-size:14px;margin-bottom:6px}input,select,textarea{width:100%;padding:11px;border:1px solid #cfdfe3;border-radius:11px;background:#fff;outline:none}input:focus,select:focus,textarea:focus{border-color:#0f9d9a}textarea{min-height:150px;resize:vertical}.full{grid-column:1/-1}
-.small{font-size:12px;color:#78909c;line-height:1.7}.notice{padding:13px;border-radius:11px;background:#fff8e7;color:#7a5b20;line-height:1.7;font-size:13px}.ok{padding:13px;border-radius:11px;background:#edfafa;color:#176b70;line-height:1.7}
-.search-box{display:flex;gap:8px}.search-box input{flex:1}.answer{margin-top:18px;background:#f8ffff;border:1px solid #cdeeed;border-radius:15px;padding:18px;line-height:1.8}.answer h3{margin-top:0;color:#0f8f8c}
-.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:15px}.quick{border:1px solid #dceff0;background:#fff;padding:13px;border-radius:12px;text-align:left;color:#455a64}.quick:hover{border-color:#0f9d9a;background:#f6ffff}
-.video-drop{border:2px dashed #b9e5e4;background:#f9ffff;border-radius:17px;padding:24px;text-align:center}.video-input{display:none}.video-preview{display:none;width:100%;max-height:460px;margin-top:18px;background:#111;border-radius:14px}.video-meta{margin-top:10px;color:#78909c;font-size:13px}
-.progress{height:9px;background:#e6eeee;border-radius:999px;overflow:hidden;margin:15px 0}.progress-bar{height:100%;width:0;background:#0f9d9a;transition:width .2s}
-.level-card{display:flex;gap:18px;align-items:center;background:#fff;border:1px solid #bde5e4;border-radius:16px;padding:18px}.level-big{font-size:48px;font-weight:900;color:#0f9d9a}
-.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:15px}.metric{background:#fff;border:1px solid #e0ecee;border-radius:12px;padding:14px}.metric strong{display:block;font-size:23px;color:#0f9d9a}.metric small{color:#78909c}
-.check-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:10px}.check{display:flex;align-items:flex-start;gap:8px;border:1px solid #e1ebed;border-radius:10px;padding:10px;background:#fff;line-height:1.5}.check input{width:auto;margin-top:4px}
-.record{display:flex;gap:15px;padding:15px 0;border-bottom:1px solid #edf3f4}.record-number{font-size:22px;font-weight:900;color:#0f9d9a}.empty{text-align:center;padding:30px;color:#78909c}.pill{display:inline-block;background:#eafafa;color:#0f8f8c;padding:4px 8px;border-radius:999px;font-size:12px;margin:3px}
-.footer{text-align:center;padding:30px 15px;color:#78909c;font-size:12px}
-@media(max-width:750px){.hero h1{font-size:30px}.stats,.grid,.grid3,.metrics,.check-grid{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr}.panel{padding:17px}.level-card{align-items:flex-start}.level-big{font-size:38px}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+background:#f5f8fa;
+color:#263238;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh}
+
+header{
+position:sticky;
+top:0;
+z-index:100;
+background:rgba(255,255,255,.97);
+backdrop-filter:blur(14px);
+border-bottom:1px solid #dceff0;
+}
+
+.header-inner{
+max-width:1100px;
+margin:auto;
+padding:12px 16px;
+}
+
+.logo{
+font-size:23px;
+font-weight:900;
+color:#0f8f8c;
+}
+
+.nav{
+display:flex;
+gap:6px;
+overflow-x:auto;
+margin-top:10px;
+padding-bottom:3px;
+scrollbar-width:none;
+}
+
+.nav::-webkit-scrollbar{
+display:none;
+}
+
+.nav button{
+border:0;
+background:transparent;
+color:#607d8b;
+padding:10px 13px;
+border-radius:11px;
+white-space:nowrap;
+}
+
+.nav button.active,
+.nav button:hover{
+background:#e7f8f7;
+color:#0f8f8c;
+}
+
+main{
+max-width:1100px;
+margin:auto;
+}
+
+.page{
+display:none;
+padding:20px 16px 80px;
+}
+
+.page.active{
+display:block;
+}
+
+.hero{
+text-align:center;
+padding:45px 15px 25px;
+}
+
+.badge{
+display:inline-block;
+padding:7px 13px;
+border-radius:999px;
+background:#e6f8f7;
+color:#0f8f8c;
+font-size:13px;
+font-weight:800;
+}
+
+.hero h1{
+margin:18px 0 10px;
+font-size:38px;
+}
+
+.hero p{
+max-width:760px;
+margin:auto;
+line-height:1.8;
+color:#607d8b;
+}
+
+.hero-actions{
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:10px;
+margin-top:24px;
+}
+
+.primary,
+.secondary,
+.danger{
+border-radius:12px;
+padding:12px 18px;
+border:0;
+}
+
+.primary{
+background:#0f9d9a;
+color:#fff;
+}
+
+.secondary{
+background:#fff;
+border:1px solid #bde5e4;
+color:#0f8f8c;
+}
+
+.danger{
+background:#fff0f0;
+color:#c62828;
+}
+
+.primary:disabled,
+.secondary:disabled{
+opacity:.5;
+cursor:not-allowed;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+margin:10px 0 25px;
+}
+
+.stat{
+background:#fff;
+border:1px solid #dceff0;
+border-radius:16px;
+padding:20px 12px;
+text-align:center;
+}
+
+.stat strong{
+display:block;
+font-size:24px;
+color:#0f9d9a;
+margin-bottom:5px;
+}
+
+.panel{
+background:#fff;
+border:1px solid #dceff0;
+border-radius:18px;
+padding:22px;
+margin:18px 0;
+box-shadow:0 5px 22px rgba(0,0,0,.035);
+}
+
+.panel h2{
+margin-top:0;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:14px;
+}
+
+.grid3{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:12px;
+}
+
+label{
+display:block;
+color:#607d8b;
+font-size:14px;
+margin-bottom:6px;
+}
+
+input,
+select,
+textarea{
+width:100%;
+padding:11px;
+border:1px solid #cfdfe3;
+border-radius:11px;
+background:#fff;
+outline:none;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+border-color:#0f9d9a;
+}
+
+textarea{
+min-height:150px;
+resize:vertical;
+}
+
+.search-box{
+display:flex;
+gap:8px;
+}
+
+.search-box input{
+flex:1;
+}
+
+.answer{
+margin-top:18px;
+background:#f8ffff;
+border:1px solid #cdeeed;
+border-radius:15px;
+padding:18px;
+line-height:1.8;
+}
+
+.answer h3{
+margin-top:0;
+color:#0f8f8c;
+}
+
+.answer-section{
+margin-top:15px;
+}
+
+.answer-section strong{
+color:#37474f;
+}
+
+.quick-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+margin-top:15px;
+}
+
+.quick{
+border:1px solid #dceff0;
+background:#fff;
+padding:13px;
+border-radius:12px;
+text-align:left;
+color:#455a64;
+}
+
+.quick:hover{
+border-color:#0f9d9a;
+background:#f6ffff;
+}
+
+.notice{
+padding:13px;
+border-radius:11px;
+background:#fff8e7;
+color:#7a5b20;
+line-height:1.7;
+font-size:13px;
+}
+
+.ok{
+padding:13px;
+border-radius:11px;
+background:#edfafa;
+color:#176b70;
+line-height:1.7;
+}
+
+.video-drop{
+border:2px dashed #b9e5e4;
+background:#f9ffff;
+border-radius:17px;
+padding:25px;
+text-align:center;
+}
+
+.video-buttons{
+display:flex;
+justify-content:center;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.video-input{
+display:none;
+}
+
+.video-preview{
+display:none;
+width:100%;
+max-height:460px;
+margin-top:18px;
+background:#111;
+border-radius:14px;
+}
+
+.video-meta{
+margin-top:10px;
+color:#78909c;
+font-size:13px;
+}
+
+.progress{
+height:9px;
+background:#e6eeee;
+border-radius:999px;
+overflow:hidden;
+margin:15px 0;
+}
+
+.progress-bar{
+height:100%;
+width:0;
+background:#0f9d9a;
+transition:width .2s;
+}
+
+.level-card{
+display:flex;
+gap:18px;
+align-items:center;
+background:#fff;
+border:1px solid #bde5e4;
+border-radius:16px;
+padding:18px;
+}
+
+.level-big{
+font-size:48px;
+font-weight:900;
+color:#0f9d9a;
+}
+
+.metrics{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+margin-top:15px;
+}
+
+.metric{
+background:#fff;
+border:1px solid #e0ecee;
+border-radius:12px;
+padding:14px;
+}
+
+.metric strong{
+display:block;
+font-size:23px;
+color:#0f9d9a;
+}
+
+.metric small{
+color:#78909c;
+}
+
+.check-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:9px;
+margin-top:10px;
+}
+
+.check{
+display:flex;
+align-items:flex-start;
+gap:8px;
+border:1px solid #e1ebed;
+border-radius:10px;
+padding:10px;
+background:#fff;
+line-height:1.5;
+}
+
+.check input{
+width:auto;
+margin-top:4px;
+}
+
+.record{
+display:flex;
+gap:15px;
+padding:15px 0;
+border-bottom:1px solid #edf3f4;
+}
+
+.record:last-child{
+border-bottom:0;
+}
+
+.record-number{
+font-size:22px;
+font-weight:900;
+color:#0f9d9a;
+}
+
+.empty{
+text-align:center;
+padding:30px;
+color:#78909c;
+}
+
+.small{
+font-size:12px;
+color:#78909c;
+line-height:1.7;
+}
+
+.pill{
+display:inline-block;
+background:#eafafa;
+color:#0f8f8c;
+padding:4px 8px;
+border-radius:999px;
+font-size:12px;
+margin:3px;
+}
+
+.toast{
+position:fixed;
+left:50%;
+bottom:24px;
+transform:translateX(-50%) translateY(20px);
+background:#263238;
+color:#fff;
+padding:11px 16px;
+border-radius:999px;
+opacity:0;
+pointer-events:none;
+transition:.25s;
+z-index:9999;
+max-width:90%;
+text-align:center;
+}
+
+.toast.show{
+opacity:1;
+transform:translateX(-50%) translateY(0);
+}
+
+.score-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+}
+
+.review-analysis{
+margin-top:18px;
+}
+
+.review-analysis ul{
+padding-left:20px;
+}
+
+.footer{
+text-align:center;
+padding:30px 15px;
+color:#78909c;
+font-size:12px;
+}
+
+.hidden{
+display:none!important;
+}
+
+@media(max-width:750px){
+
+.hero h1{
+font-size:30px;
+}
+
+.stats,
+.grid,
+.grid3,
+.metrics,
+.check-grid,
+.score-grid{
+grid-template-columns:1fr;
+}
+
+.quick-grid{
+grid-template-columns:1fr;
+}
+
+.panel{
+padding:17px;
+}
+
+.level-card{
+align-items:flex-start;
+}
+
+.level-big{
+font-size:38px;
+}
+
+.search-box{
+flex-direction:column;
+}
+
+.search-box button{
+width:100%;
+}
+
+}
 </style>
 </head>
+
 <body>
+
 <div class="app">
-<header><div class="header-inner">
+
+<header>
+<div class="header-inner">
+
 <div class="logo">🏸 羽智</div>
-<nav class="nav">
-<button data-page="home" onclick="showPage('home')">首页</button>
-<button data-page="ask" onclick="showPage('ask')">🔎 AI问答</button>
-<button data-page="video" onclick="showPage('video')">🎥 视频AI</button>
-<button data-page="plan" onclick="showPage('plan')">🏋️ 训练</button>
-<button data-page="review" onclick="showPage('review')">📋 复盘</button>
-<button data-page="record" onclick="showPage('record')">📊 我的</button>
-</nav></div></header>
+
+<nav class="nav" id="nav">
+
+<button data-page="home" onclick="showPage('home')">
+首页
+</button>
+
+<button data-page="ask" onclick="showPage('ask')">
+🔎 AI问答
+</button>
+
+<button data-page="video" onclick="showPage('video')">
+🎥 视频AI
+</button>
+
+<button data-page="plan" onclick="showPage('plan')">
+🏋️ 训练
+</button>
+
+<button data-page="review" onclick="showPage('review')">
+📋 复盘
+</button>
+
+<button data-page="record" onclick="showPage('record')">
+📊 我的
+</button>
+
+</nav>
+</div>
+</header>
+
 
 <main>
+
+
+<!-- 首页 -->
+
 <section id="home" class="page active">
-<div class="hero"><span class="badge">🏸 AI 羽毛球助手</span>
-<h1>让每一次训练，都更有方向</h1>
-<p>羽智把羽毛球知识、状态分析、身体疼痛风险提示、视频姿态分析、中羽等级估算、训练计划和比赛复盘放在一起。</p>
-<div class="actions">
-<button class="primary" onclick="showPage('ask')">🔎 我有问题</button>
-<button class="secondary" onclick="showPage('video')">🎥 分析视频</button>
-<button class="secondary" onclick="showPage('plan')">🏋️ 制定训练</button>
-<button class="secondary" onclick="showPage('review')">📋 复盘比赛</button>
-</div></div>
-<div class="stats"><div class="stat"><strong>AI</strong>智能问答</div><div class="stat"><strong>🎥</strong>视频分析</div><div class="stat"><strong>1–9</strong>中羽估算</div><div class="stat"><strong>∞</strong>成长记录</div></div>
-<div class="panel"><h2>今天感觉怎么样？</h2><p class="small">点下面的问题，马上得到对应回答。</p>
+
+<div class="hero">
+
+<span class="badge">
+🏸 AI 羽毛球助手
+</span>
+
+<h1>
+让每一次训练，都更有方向
+</h1>
+
+<p>
+羽智把羽毛球 AI 问答、状态分析、身体不适风险提示、视频分析、中羽等级估算、训练计划、比赛复盘和成长记录放在一个应用里。
+</p>
+
+<div class="hero-actions">
+
+<button class="primary" onclick="showPage('ask')">
+🔎 我有问题
+</button>
+
+<button class="secondary" onclick="showPage('video')">
+🎥 分析我的视频
+</button>
+
+<button class="secondary" onclick="showPage('plan')">
+🏋️ 制定训练
+</button>
+
+<button class="secondary" onclick="showPage('review')">
+📋 复盘比赛
+</button>
+
+</div>
+
+</div>
+
+
+<div class="stats">
+
+<div class="stat">
+<strong>AI</strong>
+智能问答
+</div>
+
+<div class="stat">
+<strong>🎥</strong>
+视频分析
+</div>
+
+<div class="stat">
+<strong>1–9</strong>
+中羽等级估算
+</div>
+
+<div class="stat">
+<strong>∞</strong>
+成长记录
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<h2>
+今天感觉怎么样？
+</h2>
+
+<p class="small">
+直接点击问题，羽智会自动进入 AI 问答并给出原因、处理方法和下一步训练建议。
+</p>
+
 <div class="quick-grid">
-<button class="quick" onclick="quickQuestion('为什么我前几天手感特别好，这几天突然变差？')">😵 手感突然下降</button>
-<button class="quick" onclick="quickQuestion('打完羽毛球膝盖疼是什么原因？')">🦵 膝盖疼</button>
-<button class="quick" onclick="quickQuestion('打完羽毛球肩膀疼是什么原因？')">💪 肩膀疼</button>
-<button class="quick" onclick="quickQuestion('为什么最近杀球越来越没有力量？')">💥 杀球没力量</button>
-<button class="quick" onclick="quickQuestion('为什么最近移动越来越慢？')">🏃 移动变慢</button>
-<button class="quick" onclick="quickQuestion('比赛关键分输了，复盘应该记录什么？')">🎯 关键分丢了</button>
-</div></div>
+
+<button class="quick" onclick="quickQuestion('为什么我前几天手感特别好，这几天突然变差？')">
+😵 手感突然下降
+</button>
+
+<button class="quick" onclick="quickQuestion('打完羽毛球膝盖疼是什么原因？')">
+🦵 膝盖疼
+</button>
+
+<button class="quick" onclick="quickQuestion('打完羽毛球肩膀疼怎么办？')">
+💪 肩膀疼
+</button>
+
+<button class="quick" onclick="quickQuestion('为什么最近杀球越来越没有力量？')">
+💥 杀球没力量
+</button>
+
+<button class="quick" onclick="quickQuestion('为什么最近移动越来越慢？')">
+🏃 移动变慢
+</button>
+
+<button class="quick" onclick="quickQuestion('羽毛球运动员应该怎么恢复？')">
+😴 恢复问题
+</button>
+
+<button class="quick" onclick="quickQuestion('比赛关键分连续丢分应该怎么复盘？')">
+🎯 关键分丢了
+</button>
+
+<button class="quick" onclick="quickQuestion('比赛领先以后为什么突然不会打了？')">
+📉 领先被追分
+</button>
+
+<button class="quick" onclick="quickQuestion('羽毛球比赛连续失误应该怎么办？')">
+⚠️ 连续失误
+</button>
+
+</div>
+
+</div>
+
 </section>
 
-<section id="ask" class="page"><div class="panel">
-<h2>🔎 AI羽毛球问答</h2>
-<p>直接问。内置训练、技术、体能、状态、恢复、身体不适风险和比赛复盘知识库。</p>
-<div class="search-box"><input id="questionInput" placeholder="例如：为什么最近手感差？膝盖疼怎么办？关键分怎么复盘？"><button class="primary" onclick="answerQuestion()">搜索回答</button></div>
+
+<!-- AI问答 -->
+
+<section id="ask" class="page">
+
+<div class="panel">
+
+<h2>
+🔎 羽智 AI 羽毛球问答
+</h2>
+
+<p class="small">
+这是羽智本地羽毛球知识库问答。覆盖训练状态、疲劳、恢复、常见身体不适、技术、步法、战术、比赛心理和复盘。
+</p>
+
+<div class="search-box">
+
+<input
+id="questionInput"
+type="text"
+placeholder="例如：我第二局19:17领先，连续丢4分，应该怎么复盘？">
+
+<button class="primary" onclick="askQuestion()">
+提问
+</button>
+
+</div>
+
+
 <div class="quick-grid">
-<button class="quick" onclick="fillQuestion('为什么前几天手感很好，后面突然变差？')">手感突然变差</button>
-<button class="quick" onclick="fillQuestion('为什么最近杀球没有力量？')">杀球没力量</button>
-<button class="quick" onclick="fillQuestion('膝盖疼可能是什么原因？')">膝盖疼</button>
-<button class="quick" onclick="fillQuestion('肩膀疼怎么办？')">肩膀疼</button>
-<button class="quick" onclick="fillQuestion('比赛关键分丢了怎么复盘？')">关键分</button>
-<button class="quick" onclick="fillQuestion('如何提高全场步法？')">全场步法</button>
-</div>
-<div id="answerBox" class="answer"><h3>羽智准备好了</h3><p>你可以问训练、技术、体能、状态、恢复、比赛和身体不适相关问题。</p></div>
-</div></section>
 
-<section id="video" class="page"><div class="panel">
-<h2>🎥 视频AI分析 + 中羽等级</h2>
-<p>建议横屏、固定机位、完整球场、连续30–90秒。视频在浏览器中处理，不会自动上传到服务器。</p>
-<div class="video-drop"><p><strong>选择视频</strong></p>
+<button class="quick" onclick="quickQuestion('为什么最近状态突然下降？')">
+状态下降
+</button>
+
+<button class="quick" onclick="quickQuestion('膝盖疼怎么办？')">
+膝盖疼
+</button>
+
+<button class="quick" onclick="quickQuestion('怎么提高杀球力量？')">
+杀球
+</button>
+
+<button class="quick" onclick="quickQuestion('怎么提高步法？')">
+步法
+</button>
+
+<button class="quick" onclick="quickQuestion('比赛关键分丢了怎么办？')">
+关键分
+</button>
+
+<button class="quick" onclick="quickQuestion('怎么安排恢复？')">
+恢复
+</button>
+
+</div>
+
+
+<div id="answerBox" class="answer hidden"></div>
+
+</div>
+
+</section>
+
+
+<!-- 视频AI -->
+
+<section id="video" class="page">
+
+<div class="panel">
+
+<h2>
+🎥 视频 AI + 中羽等级分析
+</h2>
+
+<p>
+支持手机相册选择视频，也支持手机直接拍摄视频。
+视频在你的浏览器本地处理，不上传到羽智服务器。
+推荐横屏、固定机位、完整球场、30–90 秒。
+</p>
+
+
+<div class="video-drop">
+
+<p>
+请选择比赛或训练视频
+</p>
+
 <div class="video-buttons">
-<label class="primary" for="videoInput">📹 从相册/文件选择</label>
-<label class="secondary" for="cameraInput">📷 拍摄视频</label>
+
+<label for="albumInput" class="primary">
+📱 从相册选择
+</label>
+
+<label for="cameraInput" class="secondary">
+📹 拍摄视频
+</label>
+
 </div>
-<input id="videoInput" class="video-input" type="file" accept="video/*">
-<input id="cameraInput" class="video-input" type="file" accept="video/*" capture="environment">
-<div id="videoMeta" class="video-meta">iPhone 点击后可选择图库或文件；拍摄按钮会请求相机权限。</div>
+
+<input
+id="albumInput"
+class="video-input"
+type="file"
+accept="video/*">
+
+<input
+id="cameraInput"
+class="video-input"
+type="file"
+accept="video/*"
+capture="environment">
+
+<div id="videoMeta" class="video-meta">
+尚未选择视频
 </div>
-<video id="videoPreview" class="video-preview" controls playsinline></video>
+
+</div>
+
+
+<video
+id="videoPreview"
+class="video-preview"
+controls
+playsinline
+preload="metadata">
+</video>
+
+
 <div class="grid3" style="margin-top:15px">
-<div><label>比赛类型</label><select id="matchType"><option value="singles">单打</option><option value="doubles">双打</option></select></div>
-<div><label>目标球员</label><select id="playerMode"><option value="auto">自动选择</option><option value="lower">画面下方球员</option><option value="upper">画面上方球员</option></select></div>
-<div><label>场地画面</label><select id="courtView"><option value="full">基本完整球场</option><option value="partial">部分球场</option><option value="close">近景/局部</option></select></div>
+
+<div>
+
+<label>
+比赛类型
+</label>
+
+<select id="matchType">
+
+<option value="singles">
+单打
+</option>
+
+<option value="doubles">
+双打
+</option>
+
+</select>
+
 </div>
-<div class="panel" style="margin:18px 0 0"><strong>中羽等级自评</strong><p class="small">视频看移动和姿态，自评补充击球质量、后场能力和比赛能力。</p>
+
+
+<div>
+
+<label>
+目标球员
+</label>
+
+<select id="playerMode">
+
+<option value="auto">
+自动选择
+</option>
+
+<option value="upper">
+画面上方
+</option>
+
+<option value="lower">
+画面下方
+</option>
+
+</select>
+
+</div>
+
+
+<div>
+
+<label>
+球场画面
+</label>
+
+<select id="courtView">
+
+<option value="full">
+基本完整
+</option>
+
+<option value="partial">
+部分球场
+</option>
+
+<option value="close">
+局部近景
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<div class="panel">
+
+<h3>
+🏸 中羽等级自评
+</h3>
+
+<p class="small">
+视频可以观察移动和身体姿态，但握拍、球速、落点、击球质量和正式比赛成绩无法仅靠普通视频准确判断，因此会把视频证据和你的自评结合起来。
+</p>
+
+
 <div class="check-grid">
-<label class="check"><input type="checkbox" class="rubricCheck" data-level="3">正手高远球能主动到底线</label>
-<label class="check"><input type="checkbox" class="rubricCheck" data-level="4">被动正手后场仍能基本到底线</label>
-<label class="check"><input type="checkbox" class="rubricCheck" data-level="4">四方球和全场移动较稳定</label>
-<label class="check"><input type="checkbox" class="rubricCheck" data-level="5">反手后场能到底线</label>
-<label class="check"><input type="checkbox" class="rubricCheck" data-level="5">搓、勾、放网能稳定使用</label>
-<label class="check"><input type="checkbox" class="rubricCheck" data-level="5">能连续组织攻防转换</label>
-<label class="check"><input type="checkbox" class="rubricCheck" data-level="6">被动反手后场仍有较好质量</label>
-<label class="check"><input type="checkbox" class="rubricCheck" data-level="6">杀接杀、防守反击和线路变化成熟</label>
-<label class="check"><input type="checkbox" class="rubricCheck" data-level="7">比赛中能稳定执行多拍战术和节奏变化</label>
-<label class="check"><input type="checkbox" class="rubricCheck" data-level="8">正式比赛成绩或高水平对抗能证明实力</label>
-</div></div>
-<button id="analyzeBtn" class="primary" onclick="analyzeVideo()" disabled>🤖 开始视频AI分析</button>
-<div class="progress"><div id="progressBar" class="progress-bar"></div></div>
-<div id="videoStatus" class="small">等待上传视频。</div><div id="analysisResult"></div>
-</div></section>
 
-<section id="plan" class="page"><div class="panel"><h2>🏋️ 训练计划</h2>
-<div class="grid3"><div><label>当前水平</label><select id="planLevel"><option>初学</option><option>入门</option><option>进阶</option><option>高手</option></select></div>
-<div><label>训练目标</label><select id="planGoal"><option>基本功</option><option>步法</option><option>杀球</option><option>防守</option><option>比赛</option><option>体能</option></select></div>
-<div><label>每周次数</label><select id="planTimes"><option value="1">1次</option><option value="2">2次</option><option value="3">3次</option><option value="4">4次</option><option value="5">5次以上</option></select></div></div>
-<br><button class="primary" onclick="makePlan()">生成训练计划</button>
-<div id="planResult" class="answer"><h3>等待生成</h3><p>选择目标后点击生成。</p></div></div></section>
+<label class="check">
+<input type="checkbox" class="levelCheck" data-level="3">
+正手高远球能够主动到底线
+</label>
 
-<section id="review" class="page"><div class="panel"><h2>📋 比赛复盘</h2>
-<p>不要只写“输了”“关键分没打好”。写清楚比分、阶段、发生了什么、当时选择、身体状态和下一次怎么改。</p>
-<div class="grid">
-<div><label>比赛结果</label><select id="reviewResultType"><option>赢</option><option>输</option><option>训练赛</option></select></div>
-<div><label>阶段</label><select id="reviewStage"><option>开局</option><option>中局</option><option>关键分</option><option>决胜局</option><option>全场</option></select></div>
-<div class="full"><label>发生了什么？</label><textarea id="reviewText" placeholder="例如：20-19领先，连续两个关键分都抢攻，第二拍质量下降，最后被反打。第三局后半段腿明显沉。"></textarea></div>
-<div class="full"><label>当时你的感觉</label><input id="reviewFeeling" placeholder="例如：紧张、急、腿沉、手感差、怕失误、体力下降"></div>
-</div><br><button class="primary" onclick="analyzeReview()">🤖 AI复盘并保存</button>
-<div id="reviewAnswer" class="answer"><h3>等待复盘</h3><p>写完比赛情况后点击分析。</p></div>
-</div></section>
+<label class="check">
+<input type="checkbox" class="levelCheck" data-level="4">
+被动正手后场仍能基本到底线
+</label>
 
-<section id="record" class="page"><div class="panel"><h2>📊 我的羽球</h2><p class="small">记录保存在当前手机浏览器。</p><button class="danger" onclick="clearRecords()">清空本机记录</button><div id="records" style="margin-top:15px"></div></div></section>
-</main>
-<div class="footer">羽智 · AI羽毛球助手 · 视频分析在浏览器本地处理 · 身体不适回答仅作运动健康信息参考</div>
+<label class="check">
+<input type="checkbox" class="levelCheck" data-level="4">
+四方球和全场移动比较稳定
+</label>
+
+<label class="check">
+<input type="checkbox" class="levelCheck" data-level="5">
+反手后场能够打到较深位置
+</label>
+
+<label class="check">
+<input type="checkbox" class="levelCheck" data-level="5">
+搓、勾、放网能够稳定使用
+</label>
+
+<label class="check">
+<input type="checkbox" class="levelCheck" data-level="5">
+能连续组织进攻和防守转换
+</label>
+
+<label class="check">
+<input type="checkbox" class="levelCheck" data-level="6">
+被动反手后场仍有较好质量
+</label>
+
+<label class="check">
+<input type="checkbox" class="levelCheck" data-level="6">
+能进行杀接杀和防守反击
+</label>
+
+<label class="check">
+<input type="checkbox" class="levelCheck" data-level="7">
+比赛中能够稳定执行多拍战术
+</label>
+
+<label class="check">
+<input type="checkbox" class="levelCheck" data-level="8">
+有正式比赛成绩或高水平对抗经历
+</label>
+
 </div>
+
+</div>
+
+
+<button
+id="analyzeBtn"
+class="primary"
+disabled
+onclick="analyzeVideo()">
+
+🤖 开始视频 AI 分析
+
+</button>
+
+
+<div class="progress">
+
+<div
+id="progressBar"
+class="progress-bar">
+</div>
+
+</div>
+
+
+<div
+id="videoStatus"
+class="small">
+
+等待上传视频。
+
+</div>
+
+
+<div id="videoResult"></div>
+
+</div>
+
+</section>
+
+
+<!-- 训练 -->
+
+<section id="plan" class="page">
+
+<div class="panel">
+
+<h2>
+🏋️ AI 训练计划
+</h2>
+
+<div class="grid3">
+
+<div>
+
+<label>
+当前水平
+</label>
+
+<select id="trainingLevel">
+
+<option>
+初学
+</option>
+
+<option>
+入门
+</option>
+
+<option>
+进阶
+</option>
+
+<option>
+高手
+</option>
+
+</select>
+
+</div>
+
+
+<div>
+
+<label>
+训练目标
+</label>
+
+<select id="trainingGoal">
+
+<option>
+基本功
+</option>
+
+<option>
+步法
+</option>
+
+<option>
+杀球
+</option>
+
+<option>
+防守
+</option>
+
+<option>
+比赛
+</option>
+
+<option>
+体能
+</option>
+
+</select>
+
+</div>
+
+
+<div>
+
+<label>
+每周次数
+</label>
+
+<select id="trainingTimes">
+
+<option value="1">
+1次
+</option>
+
+<option value="2">
+2次
+</option>
+
+<option value="3">
+3次
+</option>
+
+<option value="4">
+4次
+</option>
+
+<option value="5">
+5次以上
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+<br>
+
+<button
+class="primary"
+onclick="generatePlan()">
+
+生成训练计划
+
+</button>
+
+
+<div id="planResult" class="answer">
+
+填写你的情况后生成计划。
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- 复盘 -->
+
+<section id="review" class="page">
+
+<div class="panel">
+
+<h2>
+📋 比赛复盘
+</h2>
+
+<p class="small">
+这里不只是保存文字。保存以后会自动分析关键分、连续失误、领先被追、体能下降、战术执行和下一次训练重点。
+</p>
+
+
+<div class="grid3">
+
+<div>
+
+<label>
+比赛项目
+</label>
+
+<select id="reviewType">
+
+<option>
+单打
+</option>
+
+<option>
+双打
+</option>
+
+</select>
+
+</div>
+
+
+<div>
+
+<label>
+结果
+</label>
+
+<select id="reviewResultType">
+
+<option>
+获胜
+</option>
+
+<option>
+失利
+</option>
+
+<option>
+训练赛
+</option>
+
+</select>
+
+</div>
+
+
+<div>
+
+<label>
+比分
+</label>
+
+<input
+id="reviewScore"
+placeholder="例如 21:18 / 18:21 / 21:19">
+
+</div>
+
+</div>
+
+
+<br>
+
+
+<label>
+今天比赛发生了什么？
+</label>
+
+<textarea
+id="reviewText"
+placeholder="例如：第一局17:13领先，后面连续丢5分；第二局19:17领先时急着杀球，连续两次出界；第三局体力下降，后场回球质量变差。">
+</textarea>
+
+
+<br>
+<br>
+
+
+<button
+class="primary"
+onclick="saveReview()">
+
+保存并生成复盘
+
+</button>
+
+
+<div id="reviewResult" class="answer">
+
+填写比赛信息后，点击“保存并生成复盘”。
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- 我的 -->
+
+<section id="record" class="page">
+
+<div class="panel">
+
+<h2>
+📊 我的羽球
+</h2>
+
+
+<div
+class="hero-actions"
+style="justify-content:flex-start">
+
+<button
+class="secondary"
+onclick="showPage('review')">
+
+➕ 新建复盘
+
+</button>
+
+
+<button
+class="secondary"
+onclick="showPage('video')">
+
+🎥 新建视频分析
+
+</button>
+
+
+<button
+class="danger"
+onclick="clearRecords()">
+
+清空本机记录
+
+</button>
+
+</div>
+
+
+<div id="records"></div>
+
+</div>
+
+</section>
+
+
+</main>
+
+
+<footer class="footer">
+
+羽智 · AI 羽毛球助手
+<br>
+视频分析在浏览器本地处理；结果仅供训练参考，不作为医疗诊断或官方等级认证。
+
+</footer>
+
+</div>
+
+
+<div id="toast" class="toast"></div>
+
 
 <script>
-const pages=["home","ask","video","plan","review","record"];
-let videoFile=null,objectUrl=null,poseLandmarker=null,visionLoading=null;
 
-const answers=[
-{keys:["手感","状态","突然变差","发挥差","感觉不好","状态差"],title:"为什么最近手感/状态突然变差？",body:"这种情况很常见，不一定代表技术退步。羽毛球状态会受疲劳、睡眠、训练负荷、比赛密度、心理压力、肌肉紧张和恢复情况影响。",steps:["回看最近3–7天训练量、比赛量和睡眠。","训练强度降一档，保留技术感觉，增加热身和恢复。","记录腿部沉重、反应速度、击球质量和心情。","如果休息后仍明显下降，或伴随明显疼痛、头晕等异常，不要硬顶。"],tip:"公开的国羽训练报道也体现了体能、技战术、心理和恢复一起管理的思路。"},
-{keys:["膝盖","膝痛","膝疼","膝关节"],title:"打羽毛球后膝盖疼，常见原因是什么？",body:"羽毛球有大量急停、跨步、弓步和变向，膝关节会承受较大的制动负荷。常见风险包括训练量突然增加、落地/弓步控制不足、下肢力量和髋膝踝控制不足，以及既往伤病。",steps:["先减少高强度急停、跳跃和连续多球。","检查鞋底、场地、热身和弓步时膝盖是否明显内扣。","恢复阶段优先做无痛范围内的臀腿、小腿和单脚稳定训练。","出现明显肿胀、卡住、打软腿或无法承重，应尽快就医。"],tip:"羽毛球损伤研究显示下肢尤其膝、踝是重点区域。"},
-{keys:["脚踝","踝关节","崴脚","脚腕"],title:"脚踝不舒服怎么办？",body:"急停、侧向移动和落地都会增加踝关节负荷，扭伤和跟腱相关问题也比较常见。",steps:["近期减少痛点动作和大幅变向。","从无痛活动度、提踵和单脚平衡逐步恢复。","回场前先测试慢速移动、侧向移动和小跳是否无痛。","明显肿胀、变形或不能正常走路时及时就医。"],tip:"不要把“能忍”当成“已经恢复”。"},
-{keys:["肩膀","肩","肩痛","肩疼"],title:"打球后肩膀疼，常见原因是什么？",body:"高远、杀球和连续过顶动作会反复使用肩袖和肩胛控制系统。训练量突然增加、肩胛控制不足、力量不平衡和恢复不足都可能增加风险。",steps:["减少连续大力杀球和过顶多球。","加强肩胛稳定与肩袖渐进力量，而不是只拉伸。","检查是否每次都追求最大力量。","夜间痛、明显无力或活动范围下降时做专业评估。"],tip:"精英羽毛球运动员研究也把肩部过顶动作相关问题列为重要损伤方向。"},
-{keys:["肘","手肘","网球肘"],title:"手肘疼怎么判断？",body:"反复挥拍、握拍和前臂旋转会让肘部肌腱反复受力。外侧痛常被俗称为网球肘，但仅凭位置不能确定诊断。",steps:["减少高强度重复挥拍和长时间握紧球拍。","检查握拍是否过紧，以及是否用手臂单独发力。","无明显疼痛时逐步恢复前臂和腕部力量。","持续痛、明显无力或影响日常活动时评估。"],tip:"不要把所有肘痛都简单理解为同一种损伤。"},
-{keys:["手腕","腕","腕疼"],title:"手腕疼怎么办？",body:"手腕参与握拍、击球方向控制和前臂旋转。过量训练、握拍过紧、突然增加杀球或反手训练都可能导致过载。",steps:["先减少重复高负荷击球。","注意握拍放松，避免一直攥紧。","逐步恢复前臂旋转和腕部力量。","肿胀、明显无力、麻木或外伤后持续痛应就医。"],tip:"手腕问题通常还要一起看前臂、肩胛和躯干动力链。"},
-{keys:["腰","腰疼","腰痛","下背"],title:"打羽毛球腰疼常见原因？",body:"反复转体、后仰、跨步和疲劳状态下的躯干控制都会增加腰部负荷。",steps:["明显疼痛时先停止高强度转体和后仰。","恢复后从核心稳定、髋部活动度和臀腿力量开始。","后场击球不要只用腰部后仰去够球。","出现腿麻、放射痛、肌力下降或大小便异常应立即就医。"],tip:"腰痛不能仅凭网页描述诊断。"},
-{keys:["跟腱","脚后跟","跟腱疼"],title:"跟腱/脚后跟疼怎么办？",body:"频繁启动、急停和跳跃会让小腿—跟腱系统反复承受负荷，突然增加训练量是常见诱因之一。",steps:["减少跳跃、冲刺和连续急停。","根据疼痛耐受逐步进行小腿力量训练。","不要休息几天后一次性补回大量训练。","突然剧痛、听到断裂声或无法踮脚应立即就医。"],tip:"跟腱问题通常需要负荷管理和渐进力量，而不是单纯硬拉伸。"},
-{keys:["关键分","20比20","19比19","赛点","关键球"],title:"比赛关键分丢了，复盘到底记录什么？",body:"关键分复盘不要只写“我紧张”。应该把比分、战术选择、执行质量、身体状态和心理反应拆开。",steps:["记录比分，例如20–19领先还是19–20落后。","记录第一选择：发什么球、第三拍想打哪里、为什么抢攻或控制。","记录执行：判断错、脚没到、击球点晚、失误，还是战术本身不合理。","记录身体：腿沉、呼吸乱、握拍紧、移动慢。","记录心理：怕失误、急于结束、连续丢分后的注意力变化。","最后只定1–2个下次可执行动作。"],tip:"国羽公开训练信息中也强调从体能、技战术、心理等方面总结，再制定针对性计划。"},
-{keys:["步法","移动","回中","六点","启动","步频"],title:"怎么提高羽毛球全场步法？",body:"步法不是单纯追求跑得快，核心是启动、制动、到位击球、回中和下一拍准备。",steps:["先练六点路线和回中，再提高速度。","每次到位都模拟真实击球动作。","前场重视弓步和回蹬，中场重视制动，后场重视启动与回中。","固定机位拍视频，看是否提前启动、回中过深或过浅。","速度训练与臀腿、小腿、单脚稳定结合。"],tip:"羽毛球步法训练常以六点、前后场和回中作为基础组织方式。"},
-{keys:["杀球","扣杀","杀球没力","杀球没力量"],title:"为什么杀球突然没有力量？",body:"杀球力量不是只来自手臂。疲劳、击球点下降、身体链条没有传递、握拍过紧、转体不足都可能让输出下降。",steps:["检查击球点是否在身体前上方。","减少连续全力杀球，改成有质量的技术重复。","练习下肢—髋—躯干—肩—前臂—手指的连续发力。","记录当天睡眠、腿部疲劳和肩肘状态。"],tip:"先解决击球点和身体链条，再追求更大力量。"},
-{keys:["恢复","疲劳","累","酸痛","睡眠","休息"],title:"训练后怎么恢复？",body:"恢复不是完全不动，而是让训练刺激和身体恢复能力匹配。",steps:["保证睡眠和规律饮食。","高负荷训练后安排低强度恢复或休息。","记录主观疲劳、肌肉酸痛、睡眠和训练表现。","连续几次表现下降时减少负荷，而不是继续堆训练量。"],tip:"国羽公开报道也强调体能、身体机能恢复和伤病康复结合，并采用循序渐进的恢复思路。"}
+/* =========================
+   页面系统
+========================= */
+
+const pages=[
+"home",
+"ask",
+"video",
+"plan",
+"review",
+"record"
 ];
 
-function showPage(id){pages.forEach(p=>document.getElementById(p).classList.toggle("active",p===id));document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));window.scrollTo({top:0,behavior:"smooth"});if(id==="record")renderRecords()}
-function escapeHtml(s){return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
-function fillQuestion(q){document.getElementById("questionInput").value=q;answerQuestion()}
-function quickQuestion(q){showPage("ask");setTimeout(()=>fillQuestion(q),50)}
-function findAnswer(q){
-const text=q.toLowerCase();
-for(const a of answers)if(a.keys.some(k=>text.includes(k.toLowerCase())))return a;
-if(/训练|计划|提高|怎么练/.test(text))return{title:"通用训练框架",body:"羽毛球训练建议按照技术质量—专项步法—多球/连续球—实战—恢复组织，而不是每次都打满强度。",steps:["确定一个主目标。","技术训练追求稳定和质量。","步法训练加入启动、制动、回中。","实战后记录最常出现的两个问题。","下一次训练只针对这两个问题调整。"],tip:"公开国羽训练信息强调基础体能、专项体能、技战术和心理等多维度结合。"};
-return{title:"我可以继续帮你分析",body:"你可以直接告诉我具体场景，例如“第三局后半段腿沉”“杀球后肩痛”“20比20连续丢两分”“最近一周训练量增加了一倍”。",steps:["发生在训练还是比赛？","哪里不舒服或哪项能力下降？","持续多久？","最近训练量、睡眠和比赛量有没有变化？"],tip:"信息越具体，回答越有针对性。"}
-}
-function answerQuestion(){
-const q=document.getElementById("questionInput").value.trim();if(!q)return;
-const a=findAnswer(q);
-document.getElementById("answerBox").innerHTML=`<h3>${escapeHtml(a.title)}</h3><p>${escapeHtml(a.body)}</p><strong>你可以先这样做：</strong><ol>${a.steps.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ol><div class="notice"><strong>羽智提醒：</strong>${escapeHtml(a.tip)}</div><p class="small">如果涉及持续或明显疼痛、外伤、肿胀、麻木、无力或影响日常活动，请优先做专业运动医学/康复评估，不要把网页回答当诊断。</p>`
-}
-function makePlan(){
-const l=document.getElementById("planLevel").value,g=document.getElementById("planGoal").value,t=document.getElementById("planTimes").value;
-const map={基本功:"高远球、击球点、握拍放松和正反手基础。",步法:"启动、六点移动、弓步、制动和回中。",杀球:"击球点、转体、连续挥拍和杀球后回位。",防守:"接杀、挡网、挑球、防守转攻。",比赛:"多拍、线路、节奏、关键分和实战决策。",体能:"下肢力量、核心、短距离加速、变向和恢复。"};
-document.getElementById("planResult").innerHTML=`<h3>你的${t}次/周计划</h3><p>当前水平：${escapeHtml(l)}　目标：${escapeHtml(g)}</p><ol><li>热身10–15分钟。</li><li>专项技术20–30分钟：${escapeHtml(map[g])}</li><li>步法10–20分钟：从低强度开始。</li><li>实战/多球20–30分钟并记录问题。</li><li>恢复8–10分钟。</li></ol><div class="ok">若当天已经明显疲劳或出现疼痛，不要为了完成计划硬顶。</div>`
-}
-function analyzeReview(){
-const text=document.getElementById("reviewText").value.trim(),feeling=document.getElementById("reviewFeeling").value.trim(),stage=document.getElementById("reviewStage").value,result=document.getElementById("reviewResultType").value;
-if(!text){document.getElementById("reviewAnswer").innerHTML="<h3>请先写比赛经过</h3><p>至少写一件具体发生的事情。</p>";return}
-let tips=[];
-if(/关键|20|19|赛点/.test(text+stage))tips.push("关键分：下一次不要只练“抗压”，把关键分前后的第一拍、第三拍和战术选择写成固定流程。");
-if(/腿|累|体力|喘|沉/.test(text+feeling))tips.push("体能：如果后半段腿沉，训练中加入短距离重复移动和比赛后半段专项，而不是只增加慢跑。");
-if(/急|紧张|怕|慌|失误/.test(text+feeling))tips.push("心理：关键分前用固定呼吸和一句战术口令，把注意力拉回下一拍。");
-if(/杀|抢攻|进攻/.test(text))tips.push("进攻：检查抢攻是否建立在到位基础上；不到位时先把球质量做稳。");
-if(!tips.length)tips.push("把问题拆成体能、技术、战术、心理四类，每类只选一个最主要问题。");
-document.getElementById("reviewAnswer").innerHTML=`<h3>这场比赛的AI复盘</h3><p>结果：${escapeHtml(result)} · 阶段：${escapeHtml(stage)}</p><ul>${tips.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ul><div class="ok"><strong>下次只抓一件事：</strong>选择最影响比分的一项，设计一个可以重复训练的动作或战术。</div>`;
-const rs=JSON.parse(localStorage.getItem("badmintonReviews")||"[]");rs.unshift({time:new Date().toLocaleString(),result,stage,text,feeling,advice:tips});localStorage.setItem("badmintonReviews",JSON.stringify(rs.slice(0,30)))
-}
-function clearRecords(){if(confirm("确定清空本机的复盘和视频分析记录吗？")){localStorage.removeItem("badmintonReviews");localStorage.removeItem("videoAnalyses");renderRecords()}}
-function renderRecords(){
-const box=document.getElementById("records"),rs=JSON.parse(localStorage.getItem("badmintonReviews")||"[]"),vs=JSON.parse(localStorage.getItem("videoAnalyses")||"[]");
-if(!rs.length&&!vs.length){box.innerHTML="<div class='empty'>还没有记录。去复盘或视频AI开始第一次记录。</div>";return}
-let html="";
-rs.forEach((r,i)=>html+=`<div class="record"><div class="record-number">复盘${i+1}</div><div><strong>${escapeHtml(r.time)}</strong><p>${escapeHtml(r.text)}</p><span class="pill">${escapeHtml(r.result)}</span><span class="pill">${escapeHtml(r.stage)}</span><p class="small">${escapeHtml((r.advice||[]).join(" "))}</p></div></div>`);
-vs.forEach(v=>html+=`<div class="record"><div class="record-number">中羽${escapeHtml(v.level)}</div><div><strong>${escapeHtml(v.time)}</strong><p>${escapeHtml(v.name)}</p><span class="pill">置信度${escapeHtml(v.confidence)}%</span><span class="pill">${escapeHtml(v.matchType)}</span><p>${escapeHtml(v.summary)}</p></div></div>`);
-box.innerHTML=html
+
+function showPage(id){
+
+pages.forEach(p=>{
+
+const el=document.getElementById(p);
+
+if(el){
+el.classList.toggle("active",p===id);
 }
 
-function pickPose(poses,mode){
-if(!poses.length)return null;if(poses.length===1)return poses[0];
-const data=poses.map(p=>{const xs=p.map(x=>x.x),ys=p.map(x=>x.y);return{p,minY:Math.min(...ys),maxY:Math.max(...ys),area:(Math.max(...xs)-Math.min(...xs))*(Math.max(...ys)-Math.min(...ys))}});
-if(mode==="upper")return data.sort((a,b)=>a.minY-b.minY)[0].p;
-if(mode==="lower")return data.sort((a,b)=>b.maxY-a.maxY)[0].p;
-return data.sort((a,b)=>b.area-a.area)[0].p
+});
+
+
+document.querySelectorAll("#nav button").forEach(button=>{
+
+button.classList.toggle(
+"active",
+button.dataset.page===id
+);
+
+});
+
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+
+if(id==="record"){
+renderRecords();
 }
-function angle(a,b,c){const ab={x:a.x-b.x,y:a.y-b.y},cb={x:c.x-b.x,y:c.y-b.y},d=Math.hypot(ab.x,ab.y)*Math.hypot(cb.x,cb.y);return d?Math.acos(Math.max(-1,Math.min(1,(ab.x*cb.x+ab.y*cb.y)/d)))*180/Math.PI:0}
-function center(p){return{x:(p[23].x+p[24].x)/2,y:(p[23].y+p[24].y)/2}}
-function scale(p){return Math.max(.08,Math.hypot(p[11].x-p[12].x,p[11].y-p[12].y))}
-async function loadPose(){
-if(poseLandmarker)return poseLandmarker;if(visionLoading)return visionLoading;
-visionLoading=(async()=>{
-const status=document.getElementById("videoStatus");status.textContent="正在加载视频AI模型，第一次需要一点时间……";
-let mp=null;
-const urls=["https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/+esm","https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/+esm","https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.18/vision_bundle.mjs"];
-for(const url of urls){try{mp=await import(url);break}catch(e){}}
-if(!mp)throw new Error("AI模型脚本加载失败，请检查网络后刷新页面。");
-const FilesetResolver=mp.FilesetResolver||mp.default?.FilesetResolver,PoseLandmarker=mp.PoseLandmarker||mp.default?.PoseLandmarker;
-if(!FilesetResolver||!PoseLandmarker)throw new Error("AI模型接口加载失败。");
-const vision=await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm");
-poseLandmarker=await PoseLandmarker.createFromOptions(vision,{baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task",delegate:"GPU"},runningMode:"VIDEO",numPoses:2,minPoseDetectionConfidence:.4,minPosePresenceConfidence:.4,minTrackingConfidence:.4});
-return poseLandmarker
-})();
-try{return await visionLoading}finally{visionLoading=null}
+
 }
-function waitSeek(video,time){return new Promise((resolve,reject)=>{let done=false;const finish=()=>{if(done)return;done=true;video.removeEventListener("seeked",finish);resolve()};video.addEventListener("seeked",finish,{once:true});try{video.currentTime=Math.min(time,Math.max(0,video.duration-.03))}catch(e){reject(e);return}setTimeout(()=>{if(!done){done=true;video.removeEventListener("seeked",finish);reject(new Error("视频定位超时，请换一个较短的视频"))}},5000)})}
-function evaluate(metrics){
-const checks=[...document.querySelectorAll(".rubricCheck:checked")].map(x=>Number(x.dataset.level));const self=checks.length?Math.max(...checks):2;let pose=1;
-if(metrics.coverage>.35)pose=2;if(metrics.mobility>=1.4&&metrics.ready>=55)pose=3;if(metrics.mobility>=2.2&&metrics.ready>=62&&metrics.upper>=8)pose=4;if(metrics.mobility>=2.8&&metrics.ready>=68&&metrics.upper>=12)pose=5;if(metrics.mobility>=3.5&&metrics.ready>=72&&metrics.upper>=16)pose=6;if(metrics.mobility>=4.2&&metrics.ready>=75&&metrics.upper>=20)pose=7;
-const cap=document.getElementById("courtView").value==="close"?4:document.getElementById("courtView").value==="partial"?6:9;let level=Math.min(9,Math.round(self*.68+pose*.32));if(!checks.length)level=Math.min(level,4);level=Math.min(level,cap);
-const confidence=Math.max(20,Math.min(95,Math.round(35+metrics.coverage*35+(cap===9?15:7)+(checks.length?15:0))));return{level,confidence}
+
+
+window.showPage=showPage;
+
+
+/* =========================
+   通知
+========================= */
+
+function toast(message){
+
+const t=document.getElementById("toast");
+
+t.textContent=String(message||"操作完成");
+
+t.classList.add("show");
+
+clearTimeout(window.__toastTimer);
+
+window.__toastTimer=setTimeout(()=>{
+
+t.classList.remove("show");
+
+},2500);
+
 }
-window.analyzeVideo=async function(){
-if(!videoFile)return;const btn=document.getElementById("analyzeBtn"),bar=document.getElementById("progressBar"),status=document.getElementById("videoStatus"),out=document.getElementById("analysisResult"),video=document.getElementById("videoPreview");
-btn.disabled=true;out.innerHTML="";bar.style.width="0%";
+
+
+/* =========================
+   HTML安全处理
+========================= */
+
+function esc(value){
+
+return String(value??"").replace(
+/[&<>"']/g,
+character=>({
+
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+"\"":"&quot;",
+"'":"&#039;"
+
+}[character])
+);
+
+}
+
+
+/* =========================
+   AI 羽毛球知识库
+========================= */
+
+const kb={
+
+状态:{
+
+title:"状态 / 手感突然下降",
+
+cause:[
+
+"近期训练负荷、比赛密度或工作学习压力增加，恢复跟不上。",
+
+"睡眠不足、饮食不足、脱水、天气变化都会影响神经肌肉表现。",
+
+"脚下启动变慢以后，击球点也可能发生变化，主观上很容易感觉成“手感突然没了”。",
+
+"连续高强度训练以后出现短期波动，并不一定代表技术退步。"
+
+],
+
+action:[
+
+"先观察3–7天，不要因为一次状态差就疯狂加练。",
+
+"记录睡眠、训练时间、疼痛、疲劳、心情和当天表现。",
+
+"下一次训练先用高远球、吊球、网前和轻多球找回节奏，再恢复高强度。",
+
+"如果连续1–2周明显下降，应重新检查训练负荷、睡眠、营养和身体不适。"
+
+]
+
+},
+
+
+膝盖:{
+
+title:"膝盖疼",
+
+cause:[
+
+"羽毛球中的弓步、急停、变向和跳跃都会增加膝关节负荷。",
+
+"训练量突然增加、下肢力量不足或制动控制不好，也可能增加膝部压力。",
+
+"既往伤病、髋踝活动度不足，也可能让膝部承担更多工作。"
+
+],
+
+action:[
+
+"疼痛明显时先减少急停、跳跃和连续大弓步，不要硬顶比赛。",
+
+"恢复后逐渐练习臀肌、股四头肌、腘绳肌和单腿控制。",
+
+"检查鞋子、场地和弓步制动方式，训练前充分热身。",
+
+"如果持续疼痛、明显肿胀、无法正常负重或越来越严重，应进行专业评估。"
+
+]
+
+},
+
+
+脚踝:{
+
+title:"脚踝疼",
+
+cause:[
+
+"急停变向、弓步距离过大、落地不稳都会增加踝部负荷。",
+
+"以前崴过脚可能留下稳定性不足。",
+
+"鞋底抓地力、场地和疲劳也会影响脚踝稳定性。"
+
+],
+
+action:[
+
+"疼痛明显时减少变向和跳跃，不要带痛硬打。",
+
+"恢复阶段加入单脚平衡、提踵和渐进式力量训练。",
+
+"如果明显肿胀、无法负重或疼痛剧烈，应及时进行专业评估。"
+
+]
+
+},
+
+
+肩膀:{
+
+title:"肩膀疼",
+
+cause:[
+
+"重复过顶击球、杀球和高远球会产生较大的肩部负荷。",
+
+"只靠手臂发力、肩胛控制不足、疲劳以后动作变形都会增加压力。",
+
+"训练量突然增加也是常见诱因。"
+
+],
+
+action:[
+
+"疼痛明显时先减少连续杀球和过顶击球。",
+
+"恢复后加强肩袖、肩胛和躯干力量。",
+
+"改善下肢、躯干、肩部到手臂的发力链条。",
+
+"如果出现夜间痛、明显力量下降或疼痛持续，应进行专业评估。"
+
+]
+
+},
+
+
+手肘:{
+
+title:"手肘疼",
+
+cause:[
+
+"重复挥拍、握拍过紧、过度依赖前臂和手腕会增加肌腱负荷。",
+
+"杀球和多球训练量突然增加也容易诱发疼痛。"
+
+],
+
+action:[
+
+"减少高强度挥拍，检查是否长期死握球拍。",
+
+"恢复以后逐渐加强前臂、肩部和躯干协同。",
+
+"如果疼痛持续或越来越严重，不要硬练，应进行专业评估。"
+
+]
+
+},
+
+
+手腕:{
+
+title:"手腕疼",
+
+cause:[
+
+"高频挥拍、握拍过紧、过度依赖手腕制造力量都可能增加负荷。",
+
+"训练量突然增加或者已有劳损时更容易出现。"
+
+],
+
+action:[
+
+"先降低挥拍频率和杀球量。",
+
+"不要为了力量不断甩腕。",
+
+"恢复以后逐渐增加前臂力量和技术训练。",
+
+"如果出现明显肿胀、麻木或力量下降，应及时评估。"
+
+]
+
+},
+
+
+腰背:{
+
+title:"腰背疼",
+
+cause:[
+
+"后仰、转体、弯腰以及疲劳状态下的代偿都会增加腰背负荷。",
+
+"核心、髋部或胸椎控制不足也可能让腰背承担更多工作。"
+
+],
+
+action:[
+
+"疼痛明显时减少大幅后仰和快速转体。",
+
+"恢复以后练习核心稳定、髋部力量和胸椎活动。",
+
+"如果伴随腿部麻木、无力或大小便异常，应立即就医。"
+
+]
+
+},
+
+
+杀球:{
+
+title:"杀球力量下降",
+
+cause:[
+
+"脚下没有提前到位，导致击球点下降。",
+
+"身体转动和下肢到躯干再到手臂的力量传递不足。",
+
+"握拍过紧、只用手臂发力或者疲劳都会降低拍头速度。"
+
+],
+
+action:[
+
+"先练到位和击球点，再练挥拍速度，最后再追求最大力量。",
+
+"做影子挥拍、多球和轻量杀球，注意放松握拍。",
+
+"疲劳状态不要连续追求最大杀球。"
+
+]
+
+},
+
+
+步法:{
+
+title:"步法 / 移动变慢",
+
+cause:[
+
+"启动第一步慢、回中心不稳定或者最后一步制动不好。",
+
+"重心过高、疲劳以及判断较晚都会让移动显得变慢。"
+
+],
+
+action:[
+
+"先练启动和回中心，再练六点移动。",
+
+"加入真实多球，让判断、移动和击球连成一个循环。",
+
+"每次只提高一点速度，优先保证动作质量。"
+
+]
+
+},
+
+
+恢复:{
+
+title:"羽毛球训练恢复",
+
+cause:[
+
+"训练后的疲劳不仅来自肌肉，也来自神经、睡眠、营养和心理压力。",
+
+"长期训练量高于恢复能力，表现就可能下降。"
+
+],
+
+action:[
+
+"保证规律睡眠。",
+
+"保证足够的总能量、碳水化合物和蛋白质摄入。",
+
+"高强度日和低强度恢复日交替安排。",
+
+"记录训练量、疼痛和主观疲劳。",
+
+"持续异常疲劳或表现长期下降时，应进行专业评估。"
+
+]
+
+},
+
+
+关键分:{
+
+title:"比赛关键分丢了怎么复盘",
+
+cause:[
+
+"关键分最容易出现急于结束回合、战术过度冒险的问题。",
+
+"比分压力可能让注意力从执行过程转移到“千万不能输”。",
+
+"对手也可能在关键分改变发接发、落点或者节奏。"
+
+],
+
+action:[
+
+"不要只写“关键分输了”，把关键分前3拍和最后一拍写出来。",
+
+"记录当时比分、发球或接发、第一拍落点、主动还是被动以及失误类型。",
+
+"下一次把关键分目标改成一个具体动作，例如“先稳第一拍”“不抢第三拍”。",
+
+"训练时专门设置17:17、18:18、19:19等比分情境。"
+
+]
+
+},
+
+
+领先:{
+
+title:"领先以后被追分",
+
+cause:[
+
+"领先以后容易从主动打球变成保护比分。",
+
+"连续几个回合失误以后可能出现急于扳回来的心理。",
+
+"对手可能利用你的节奏变化重新建立主动。"
+
+],
+
+action:[
+
+"领先时继续执行已经有效的战术，不要因为领先突然完全保守。",
+
+"连续丢2分以后先重置一个回合，目标是稳定第一拍。",
+
+"复盘时寻找“领先转折点”，而不是只看最终比分。"
+
+]
+
+},
+
+
+失误:{
+
+title:"比赛连续失误",
+
+cause:[
+
+"连续失误通常不是单一技术问题。",
+
+"也可能来自疲劳、选择难度过高、判断晚或者注意力波动。"
+
+],
+
+action:[
+
+"把失误分成下网、出界、挂网、判断、步法不到位和战术选择错误。",
+
+"连续两分失误以后降低难度，先重新建立回合。",
+
+"训练中加入“连续两次失误后的重置”情境。"
+
+]
+
+}
+
+};
+
+
+/* =========================
+   问题分类
+========================= */
+
+function classifyQuestion(question){
+
+const text=String(question||"").toLowerCase();
+
+if(/关键分|19[:：]17|19[:：]18|18[:：]17|18[:：]18|赛点|关键球/.test(text)){
+return"关键分";
+}
+
+if(/领先|被追|追分|领先后/.test(text)){
+return"领先";
+}
+
+if(/连续失误|连丢|失误|出界|下网|挂网/.test(text)){
+return"失误";
+}
+
+if(/膝|膝盖/.test(text)){
+return"膝盖";
+}
+
+if(/脚踝|脚腕|踝/.test(text)){
+return"脚踝";
+}
+
+if(/肩|肩膀/.test(text)){
+return"肩膀";
+}
+
+if(/肘/.test(text)){
+return"手肘";
+}
+
+if(/手腕|腕/.test(text)){
+return"手腕";
+}
+
+if(/腰|背/.test(text)){
+return"腰背";
+}
+
+if(/杀球|扣杀|杀球力量/.test(text)){
+return"杀球";
+}
+
+if(/步法|脚步|移动|启动|回中心/.test(text)){
+return"步法";
+}
+
+if(/恢复|疲劳|累|休息|睡眠/.test(text)){
+return"恢复";
+}
+
+if(/手感|状态|发挥|突然差|突然变差/.test(text)){
+return"状态";
+}
+
+return null;
+
+}
+
+
+/* =========================
+   知识库回答
+========================= */
+
+function renderKnowledge(key,question){
+
+const item=kb[key];
+
+if(!item){
+
+return`
+
+<h3>🏸 羽智暂时没有匹配到这个问题</h3>
+
+<p>
+你可以把问题描述得具体一些。
+</p>
+
+<p>
+例如：
+</p>
+
+<ul>
+
+<li>第二局19:17领先以后连续丢4分怎么办？</li>
+
+<li>杀球的时候肩膀前侧疼怎么办？</li>
+
+<li>连续训练三天以后手感突然下降怎么办？</li>
+
+<li>第三局移动越来越慢是什么原因？</li>
+
+</ul>
+
+<div class="notice">
+
+当前版本采用本地知识库回答，不依赖外部 AI API，因此不会因为没有 API 密钥而整个应用失效。
+
+</div>
+
+`;
+
+}
+
+
+let medicalWarning="";
+
+if(/疼|痛|肿|麻|伤/.test(question)){
+
+medicalWarning=`
+
+<div class="notice">
+
+⚠️ 以上属于运动训练知识和风险提示，不是医学诊断。
+如果疼痛明显、持续加重、出现明显肿胀、麻木、无力、无法正常走路或影响日常活动，应停止高强度运动并寻求专业医疗评估。
+
+</div>
+
+`;
+
+}
+
+
+let trainingText="";
+
+if(key==="关键分"){
+
+trainingText="训练时设置17:17、18:18、19:19等比分情境，每个关键分只执行一个明确战术目标。";
+
+}else if(key==="状态"){
+
+trainingText="下一次训练先进行10–15分钟轻多球和简单击球找节奏，再进入正常强度。";
+
+}else if(key==="杀球"){
+
+trainingText="先练脚下到位、击球点和转体，再练挥拍速度，最后才追求最大杀球。";
+
+}else if(key==="步法"){
+
+trainingText="下一次训练重点放在启动、回中心和最后一步制动，不要只追求移动速度。";
+
+}else{
+
+trainingText="把上面的建议拆成一个可以在下一次训练真正执行的小目标。";
+
+}
+
+
+return`
+
+<h3>
+🏸 ${esc(item.title)}
+</h3>
+
+<div class="answer-section">
+
+<strong>
+可能原因
+</strong>
+
+<ul>
+
+${item.cause.map(x=>`
+
+<li>
+${esc(x)}
+</li>
+
+`).join("")}
+
+</ul>
+
+</div>
+
+
+<div class="answer-section">
+
+<strong>
+建议怎么做
+</strong>
+
+<ul>
+
+${item.action.map(x=>`
+
+<li>
+${esc(x)}
+</li>
+
+`).join("")}
+
+</ul>
+
+</div>
+
+
+<div class="answer-section">
+
+<strong>
+下一步训练
+</strong>
+
+<p>
+${esc(trainingText)}
+</p>
+
+</div>
+
+${medicalWarning}
+
+`;
+
+}
+
+
+/* =========================
+   AI问答
+========================= */
+
+function askQuestion(){
+
+const input=document.getElementById("questionInput");
+
+const question=input.value.trim();
+
+if(!question){
+
+toast("请先输入问题");
+
+return;
+
+}
+
+const box=document.getElementById("answerBox");
+
+const key=classifyQuestion(question);
+
+box.classList.remove("hidden");
+
+box.innerHTML=renderKnowledge(key,question);
+
+toast("已生成回答");
+
+}
+
+
+function quickQuestion(question){
+
+showPage("ask");
+
+document.getElementById("questionInput").value=question;
+
+askQuestion();
+
+}
+
+
+window.askQuestion=askQuestion;
+window.quickQuestion=quickQuestion;
+
+
+document.getElementById("questionInput").addEventListener(
+"keydown",
+event=>{
+
+if(event.key==="Enter"){
+
+askQuestion();
+
+}
+
+}
+);
+
+
+/* =========================
+   训练计划
+========================= */
+
+function generatePlan(){
+
+const level=document.getElementById("trainingLevel").value;
+
+const goal=document.getElementById("trainingGoal").value;
+
+const times=Number(
+document.getElementById("trainingTimes").value
+);
+
+
+const plans={
+
+基本功:[
+
+"10分钟热身与肩髋踝活动",
+
+"20分钟高远球和吊球稳定性",
+
+"15分钟多球击球点",
+
+"15分钟六点步法",
+
+"10分钟轻实战"
+
+],
+
+步法:[
+
+"10分钟热身",
+
+"15分钟启动与回中心",
+
+"20分钟六点移动",
+
+"20分钟多球结合步法",
+
+"10分钟低强度实战"
+
+],
+
+杀球:[
+
+"10分钟热身",
+
+"15分钟影子挥拍与转体",
+
+"20分钟后场多球",
+
+"15分钟杀上网和连续进攻",
+
+"10分钟放松"
+
+],
+
+防守:[
+
+"10分钟热身",
+
+"20分钟接杀",
+
+"20分钟防守反击",
+
+"15分钟挡网和挑球",
+
+"10分钟实战"
+
+],
+
+比赛:[
+
+"10分钟热身",
+
+"15分钟发接发",
+
+"20分钟多拍战术",
+
+"20分钟17:17关键分情境",
+
+"10分钟比赛复盘"
+
+],
+
+体能:[
+
+"10分钟热身",
+
+"15分钟间歇移动",
+
+"15分钟下肢力量",
+
+"15分钟核心",
+
+"10分钟恢复"
+
+]
+
+};
+
+
+const base=plans[goal]||plans.基本功;
+
+const sessions=[];
+
+
+for(let i=0;i<times;i++){
+
+sessions.push(`
+
+<li>
+
+<strong>
+第${i+1}次：
+</strong>
+
+${base[i%base.length]}
+
+</li>
+
+`);
+
+}
+
+
+document.getElementById("planResult").innerHTML=`
+
+<h3>
+你的训练方案
+</h3>
+
+<p>
+
+当前水平：
+${esc(level)}
+
+<br>
+
+训练目标：
+${esc(goal)}
+
+<br>
+
+每周训练：
+${times}次
+
+</p>
+
+<ol>
+
+${sessions.join("")}
+
+</ol>
+
+<div class="ok">
+
+高强度训练不要连续堆叠。
+每周留出恢复时间，并根据当天状态调整训练强度。
+
+</div>
+
+`;
+
+toast("训练计划已生成");
+
+}
+
+
+window.generatePlan=generatePlan;
+
+
+/* =========================
+   比赛复盘
+========================= */
+
+function analyzeReview(text,score,result){
+
+const fullText=(text+" "+score).toLowerCase();
+
+const items=[];
+
+
+if(
+/关键分|19[:：]1[6-9]|18[:：]1[6-9]|赛点|最后几分/.test(fullText)
+){
+
+items.push(
+"你提到了关键分。下次不要只记录结果，要记录关键分前3拍、最后一拍以及当时的战术选择。"
+);
+
+}
+
+
+if(
+/连续|连丢|失误|出界|下网|挂网/.test(fullText)
+){
+
+items.push(
+"建议把失误分类为技术执行、判断、步法不到位、战术选择、注意力或体能，而不是统一写成“失误多”。"
+);
+
+}
+
+
+if(
+/领先|被追|追分/.test(fullText)
+){
+
+items.push(
+"领先以后被追时，重点寻找转折点：是节奏变化、主动变保守、连续失误，还是对手改变了发接发和落点。"
+);
+
+}
+
+
+if(
+/累|体力|第三局|后半局|疲劳|喘/.test(fullText)
+){
+
+items.push(
+"如果后半局体能下降，要单独记录后场质量、回中心速度和连续多拍能力。"
+);
+
+}
+
+
+if(
+/杀球|进攻/.test(fullText)
+){
+
+items.push(
+"如果进攻阶段失误较多，需要判断是击球点问题、脚下不到位、选择过急，还是疲劳以后动作变形。"
+);
+
+}
+
+
+if(
+/防守|接杀/.test(fullText)
+){
+
+items.push(
+"如果防守连续失分，要记录第一拍防守质量、回球高度、回中心位置以及下一拍是否被动。"
+);
+
+}
+
+
+if(items.length===0){
+
+items.push(
+"下次复盘尽量记录比分节点、连续失分原因、有效战术以及下一次训练最需要改的一个动作。"
+);
+
+}
+
+
+let focus="";
+
+
+if(
+/关键分/.test(fullText)
+){
+
+focus="比赛关键分情境训练 + 第一拍稳定性";
+
+}else if(
+/失误|出界|下网/.test(fullText)
+){
+
+focus="减少非受迫性失误 + 建立连续两分后的重置习惯";
+
+}else if(
+/领先|被追/.test(fullText)
+){
+
+focus="领先情况下保持原有战术 + 转折点识别";
+
+}else if(
+/体力|第三局|疲劳/.test(fullText)
+){
+
+focus="体能管理 + 后半局脚下和后场质量";
+
+}else{
+
+focus="把本场最明显的问题转化成一个具体训练目标";
+
+}
+
+
+return{
+items,
+focus
+};
+
+}
+
+
+function saveReview(){
+
+const text=document.getElementById("reviewText").value.trim();
+
+if(!text){
+
+toast("请先填写比赛经过");
+
+return;
+
+}
+
+
+const type=document.getElementById("reviewType").value;
+
+const result=document.getElementById("reviewResultType").value;
+
+const score=document.getElementById("reviewScore").value.trim();
+
+
+const analysis=analyzeReview(
+text,
+score,
+result
+);
+
+
+let records=[];
+
+
 try{
-await new Promise(r=>video.readyState>=2?r():video.addEventListener("loadedmetadata",r,{once:true}));
-if(!video.duration||!isFinite(video.duration))throw new Error("无法读取视频时长。");
-if(video.duration>120)throw new Error("当前手机版本限制单次分析120秒，请先剪成30–90秒代表片段。");
-const pose=await loadPose();const samples=Math.min(80,Math.max(24,Math.floor(video.duration/.9)));let detected=0,totalMove=0,prev=null,kneeSum=0,kneeN=0,upperN=0;
+
+records=JSON.parse(
+localStorage.getItem("badmintonReviews")||"[]"
+);
+
+if(!Array.isArray(records))records=[];
+
+}catch(error){
+
+records=[];
+
+}
+
+
+const item={
+
+time:new Date().toLocaleString(),
+
+type:type,
+
+result:result,
+
+score:score,
+
+text:text,
+
+focus:analysis.focus,
+
+analysis:analysis.items
+
+};
+
+
+records.unshift(item);
+
+
+localStorage.setItem(
+"badmintonReviews",
+JSON.stringify(records.slice(0,50))
+);
+
+
+document.getElementById("reviewResult").innerHTML=`
+
+<h3>
+✅ 复盘已保存
+</h3>
+
+<p>
+
+<span class="pill">
+${esc(type)}
+</span>
+
+<span class="pill">
+${esc(result)}
+</span>
+
+${score?
+
+`<span class="pill">
+${esc(score)}
+</span>`
+
+:""}
+
+</p>
+
+
+<div class="review-analysis">
+
+<strong>
+🏸 羽智复盘
+</strong>
+
+<ul>
+
+${analysis.items.map(x=>`
+
+<li>
+${esc(x)}
+</li>
+
+`).join("")}
+
+</ul>
+
+
+<div class="ok">
+
+<strong>
+下一步训练：
+</strong>
+
+${esc(analysis.focus)}
+
+</div>
+
+</div>
+
+`;
+
+document.getElementById("reviewText").value="";
+
+toast("复盘已保存并生成建议");
+
+}
+
+
+window.saveReview=saveReview;
+
+
+/* =========================
+   视频变量
+========================= */
+
+let videoFile=null;
+
+let videoURL=null;
+
+let pose=null;
+
+let poseReady=false;
+
+let lastPose=null;
+
+
+const albumInput=
+document.getElementById("albumInput");
+
+const cameraInput=
+document.getElementById("cameraInput");
+
+const video=
+document.getElementById("videoPreview");
+
+const analyzeBtn=
+document.getElementById("analyzeBtn");
+
+
+/* =========================
+   视频载入
+========================= */
+
+function loadVideo(file){
+
+if(!file){
+
+return;
+
+}
+
+
+videoFile=file;
+
+
+if(videoURL){
+
+URL.revokeObjectURL(videoURL);
+
+}
+
+
+videoURL=URL.createObjectURL(file);
+
+video.src=videoURL;
+
+video.style.display="block";
+
+
+document.getElementById("videoMeta").textContent=
+`${file.name} · ${(file.size/1024/1024).toFixed(1)} MB`;
+
+
+analyzeBtn.disabled=false;
+
+
+document.getElementById("videoStatus").textContent=
+"视频已经载入，可以开始分析。";
+
+
+toast("视频已载入");
+
+}
+
+
+albumInput.addEventListener(
+"change",
+event=>{
+
+loadVideo(event.target.files[0]);
+
+}
+);
+
+
+cameraInput.addEventListener(
+"change",
+event=>{
+
+loadVideo(event.target.files[0]);
+
+}
+);
+
+
+/* =========================
+   MediaPipe 初始化
+========================= */
+
+async function initPose(){
+
+if(poseReady && pose){
+
+return true;
+
+}
+
+
+if(typeof window.Pose!=="function"){
+
+return false;
+
+}
+
+
+try{
+
+pose=new window.Pose({
+
+locateFile:file=>
+
+`https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/${file}`
+
+});
+
+
+pose.setOptions({
+
+modelComplexity:1,
+
+smoothLandmarks:true,
+
+enableSegmentation:false,
+
+minDetectionConfidence:.5,
+
+minTrackingConfidence:.5
+
+});
+
+
+pose.onResults(result=>{
+
+lastPose=
+result&&result.poseLandmarks
+?
+result.poseLandmarks
+:
+null;
+
+});
+
+
+poseReady=true;
+
+return true;
+
+}catch(error){
+
+pose=null;
+
+poseReady=false;
+
+return false;
+
+}
+
+}
+
+
+/* =========================
+   视频定位
+========================= */
+
+function seekVideo(time){
+
+return new Promise((resolve,reject)=>{
+
+if(!video.duration || !isFinite(video.duration)){
+
+reject(
+new Error("浏览器无法读取视频时长")
+);
+
+return;
+
+}
+
+
+let finished=false;
+
+
+const timeout=setTimeout(()=>{
+
+if(finished)return;
+
+finished=true;
+
+video.removeEventListener(
+"seeked",
+done
+);
+
+reject(
+new Error("视频定位超时，请尝试重新选择视频")
+);
+
+},7000);
+
+
+function done(){
+
+if(finished)return;
+
+finished=true;
+
+clearTimeout(timeout);
+
+video.removeEventListener(
+"seeked",
+done
+);
+
+resolve();
+
+}
+
+
+video.addEventListener(
+"seeked",
+done,
+{once:true}
+);
+
+
+const target=Math.min(
+time,
+Math.max(0,video.duration-.05)
+);
+
+
+try{
+
+video.currentTime=target;
+
+}catch(error){
+
+clearTimeout(timeout);
+
+video.removeEventListener(
+"seeked",
+done
+);
+
+reject(error);
+
+}
+
+});
+
+}
+
+
+/* =========================
+   数学工具
+========================= */
+
+function dist(a,b){
+
+return Math.hypot(
+a.x-b.x,
+a.y-b.y
+);
+
+}
+
+
+function bodyScale(points){
+
+if(
+!points ||
+!points[11] ||
+!points[12]
+){
+
+return .06;
+
+}
+
+return Math.max(
+.06,
+dist(points[11],points[12])
+);
+
+}
+
+
+function angle(a,b,c){
+
+const ab={
+x:a.x-b.x,
+y:a.y-b.y
+};
+
+const cb={
+x:c.x-b.x,
+y:c.y-b.y
+};
+
+const denominator=
+Math.hypot(ab.x,ab.y)*
+Math.hypot(cb.x,cb.y);
+
+
+if(!denominator){
+
+return 0;
+
+}
+
+
+const value=
+(ab.x*cb.x+ab.y*cb.y)/
+denominator;
+
+
+return Math.acos(
+Math.max(
+-1,
+Math.min(1,value)
+)
+)*180/Math.PI;
+
+}
+
+
+/* =========================
+   球员选择
+========================= */
+
+function choosePose(list,mode){
+
+if(
+!list ||
+!list.length
+){
+
+return null;
+
+}
+
+
+if(list.length===1){
+
+return list[0];
+
+}
+
+
+const arr=list.map(points=>{
+
+const xs=points.map(p=>p.x);
+
+const ys=points.map(p=>p.y);
+
+
+return{
+
+points:points,
+
+minY:Math.min(...ys),
+
+maxY:Math.max(...ys),
+
+area:
+(
+Math.max(...xs)-
+Math.min(...xs)
+)*
+(
+Math.max(...ys)-
+Math.min(...ys)
+)
+
+};
+
+});
+
+
+if(mode==="upper"){
+
+arr.sort(
+(a,b)=>a.minY-b.minY
+);
+
+return arr[0].points;
+
+}
+
+
+if(mode==="lower"){
+
+arr.sort(
+(a,b)=>b.maxY-a.maxY
+);
+
+return arr[0].points;
+
+}
+
+
+arr.sort(
+(a,b)=>b.area-a.area
+);
+
+return arr[0].points;
+
+}
+
+
+/* =========================
+   中羽等级
+========================= */
+
+function levelFrom(metrics){
+
+const checks=[
+...document.querySelectorAll(
+".levelCheck:checked"
+)
+].map(
+item=>Number(item.dataset.level)
+);
+
+
+const selfLevel=
+checks.length
+?
+Math.max(...checks)
+:
+2;
+
+
+let poseLevel=1;
+
+
+if(metrics.coverage>.35){
+
+poseLevel=2;
+
+}
+
+
+if(
+metrics.mobility>1.2 &&
+metrics.ready>50
+){
+
+poseLevel=3;
+
+}
+
+
+if(
+metrics.mobility>2 &&
+metrics.ready>60 &&
+metrics.upper>8
+){
+
+poseLevel=4;
+
+}
+
+
+if(
+metrics.mobility>2.7 &&
+metrics.ready>65 &&
+metrics.upper>12
+){
+
+poseLevel=5;
+
+}
+
+
+if(
+metrics.mobility>3.4 &&
+metrics.ready>70 &&
+metrics.upper>16
+){
+
+poseLevel=6;
+
+}
+
+
+if(
+metrics.mobility>4 &&
+metrics.ready>74 &&
+metrics.upper>20
+){
+
+poseLevel=7;
+
+}
+
+
+const view=
+document.getElementById("courtView").value;
+
+
+const cap=
+view==="close"
+?
+4
+:
+view==="partial"
+?
+6
+:
+9;
+
+
+let level=Math.round(
+selfLevel*.68+
+poseLevel*.32
+);
+
+
+if(!checks.length){
+
+level=Math.min(level,4);
+
+}
+
+
+level=Math.max(
+1,
+Math.min(cap,level)
+);
+
+
+let confidence=Math.round(
+35+
+metrics.coverage*35+
+(view==="full"?15:7)+
+(checks.length?15:0)
+);
+
+
+confidence=Math.max(
+20,
+Math.min(95,confidence)
+);
+
+
+return{
+
+level,
+
+confidence,
+
+selfLevel,
+
+poseLevel
+
+};
+
+}
+
+
+/* =========================
+   基础视频视觉分析
+   不依赖 MediaPipe
+========================= */
+
+async function fallbackMotion(){
+
+const canvas=
+document.createElement("canvas");
+
+const context=
+canvas.getContext(
+"2d",
+{willReadFrequently:true}
+);
+
+
+canvas.width=160;
+
+canvas.height=90;
+
+
+const samples=
+Math.min(
+20,
+Math.max(
+8,
+Math.floor(video.duration*1.2)
+)
+);
+
+
+let previous=null;
+
+let energy=0;
+
+let count=0;
+
+
 for(let i=0;i<samples;i++){
-const t=video.duration*(i/(samples-1));await waitSeek(video,t);let result;
-try{result=pose.detectForVideo(video,Math.round(t*1000))}catch(e){result=pose.detectForVideo(video,performance.now())}
-const p=pickPose(result.landmarks||[],document.getElementById("playerMode").value);
-if(p){detected++;const c=center(p),s=scale(p);if(prev)totalMove+=Math.hypot(c.x-prev.x,c.y-prev.y)/s;prev=c;
-const lk=angle(p[23],p[25],p[27]),rk=angle(p[24],p[26],p[28]);kneeSum+=(lk+rk)/2;kneeN+=2;
-const le=angle(p[11],p[13],p[15]),re=angle(p[12],p[14],p[16]);if(p[15].y<p[11].y-.02&&le>35&&le<175)upperN++;if(p[16].y<p[12].y-.02&&re>35&&re<175)upperN++}
-bar.style.width=Math.round((i+1)/samples*100)+"%";status.textContent=`AI正在分析：${i+1}/${samples}`;await new Promise(r=>setTimeout(r,0))
+
+const time=
+video.duration*
+(
+i/(samples-1)
+);
+
+
+await seekVideo(time);
+
+
+context.drawImage(
+video,
+0,
+0,
+160,
+90
+);
+
+
+const data=
+context.getImageData(
+0,
+0,
+160,
+90
+).data;
+
+
+if(previous){
+
+let sum=0;
+
+for(
+let j=0;
+j<data.length;
+j+=16
+){
+
+sum+=
+Math.abs(data[j]-previous[j])+
+Math.abs(data[j+1]-previous[j+1])+
+Math.abs(data[j+2]-previous[j+2]);
+
 }
-const coverage=detected/samples,mobility=detected?totalMove/detected:0,ready=kneeN?Math.max(0,Math.min(100,100-Math.abs(kneeSum/kneeN-145)*1.8)):0,upper=detected?upperN/detected*100:0;
-const lv=evaluate({coverage,mobility,ready,upper}),match=document.getElementById("matchType").value==="singles"?"单打":"双打";
-const target=lv.level<=3?"高远球稳定性 + 六点步法":lv.level<=4?"四方球 + 回中 + 主动进攻":lv.level<=5?"反手后场 + 网前控制 + 连续攻防":lv.level<=6?"被动球质量 + 杀接杀 + 战术变化":"多拍控制 + 节奏变化 + 正式比赛表现";
-let warnings=[];if(coverage<.45)warnings.push("人体识别覆盖率偏低，建议固定机位并完整拍到球场。");if(mobility<1.8)warnings.push("移动线索偏少，建议补拍完整六点移动。");if(upper<8)warnings.push("上肢高举线索较少，建议补拍后场击球。");if(!warnings.length)warnings.push("视频中的姿态与移动线索整体可用，但击球质量、落点和战术仍需要比赛数据补充。");
-out.innerHTML=`<div class="panel"><div class="level-card"><div class="level-big">中羽${lv.level}</div><div><h3 style="margin:0 0 6px">视频估算等级</h3><div class="small">${match} · 综合置信度 ${lv.confidence}%</div><p class="small">这是“视频姿态证据 + 技术自评”的估算，不是官方认证。</p></div></div><div class="metrics"><div class="metric"><strong>${Math.round(coverage*100)}%</strong><small>人体识别覆盖</small></div><div class="metric"><strong>${mobility.toFixed(2)}</strong><small>归一化移动量</small></div><div class="metric"><strong>${Math.round(ready)}</strong><small>准备姿态线索</small></div><div class="metric"><strong>${Math.round(upper)}%</strong><small>上肢高举线索</small></div></div><div class="answer"><h3>AI观察</h3><p>${warnings.map(escapeHtml).join("<br>")}</p><p><strong>下一步训练：</strong>${escapeHtml(target)}</p></div><div class="notice">普通手机视频无法可靠判断握拍、球速、落点、击球质量等全部信息，所以等级只能作为训练参考。</div></div>`;
-const vs=JSON.parse(localStorage.getItem("videoAnalyses")||"[]");vs.unshift({time:new Date().toLocaleString(),name:videoFile.name,level:lv.level,confidence:lv.confidence,matchType:match,summary:target});localStorage.setItem("videoAnalyses",JSON.stringify(vs.slice(0,30)));
-status.textContent="分析完成，结果已保存到“我的”。"
-}catch(e){status.textContent="分析失败："+e.message;out.innerHTML=`<div class="notice">${escapeHtml(e.message)}<br>如果再次看到“Importing a module script failed”，下一步把AI依赖改成仓库本地文件即可彻底绕过CDN模块问题。</div>`}
-finally{btn.disabled=false}
+
+
+energy+=
+sum/
+(
+(data.length/16)*
+765
+);
+
+count++;
+
 }
-function handleVideo(file){
-videoFile=file||null;const video=document.getElementById("videoPreview"),meta=document.getElementById("videoMeta"),btn=document.getElementById("analyzeBtn");
-if(objectUrl)URL.revokeObjectURL(objectUrl);if(!videoFile){btn.disabled=true;video.style.display="none";return}
-objectUrl=URL.createObjectURL(videoFile);video.src=objectUrl;video.style.display="block";meta.textContent=`${videoFile.name} · ${(videoFile.size/1024/1024).toFixed(1)} MB`;btn.disabled=false;document.getElementById("videoStatus").textContent="视频已准备好，点击开始分析。"
+
+
+previous=data.slice();
+
+
+document.getElementById(
+"progressBar"
+).style.width=
+Math.round(
+(i+1)/samples*100
+)+"%";
+
+
+document.getElementById(
+"videoStatus"
+).textContent=
+`基础视觉分析：${i+1}/${samples}`;
+
 }
-document.getElementById("videoInput").addEventListener("change",e=>handleVideo(e.target.files[0]));
-document.getElementById("cameraInput").addEventListener("change",e=>handleVideo(e.target.files[0]));
-document.getElementById("questionInput").addEventListener("keydown",e=>{if(e.key==="Enter")answerQuestion()});
-renderRecords();showPage("home");
+
+
+return{
+
+energy:
+count
+?
+energy/count
+:
+0
+
+};
+
+}
+
+
+/* =========================
+   视频 AI 主程序
+========================= */
+
+async function analyzeVideo(){
+
+if(!videoFile){
+
+toast("请先选择视频");
+
+return;
+
+}
+
+
+analyzeBtn.disabled=true;
+
+
+const status=
+document.getElementById(
+"videoStatus"
+);
+
+const bar=
+document.getElementById(
+"progressBar"
+);
+
+const output=
+document.getElementById(
+"videoResult"
+);
+
+
+output.innerHTML="";
+
+bar.style.width="0%";
+
+
+try{
+
+
+/* 等待视频元数据 */
+
+await new Promise(
+(resolve,reject)=>{
+
+if(
+video.readyState>=1 &&
+isFinite(video.duration)
+){
+
+resolve();
+
+return;
+
+}
+
+
+let timer=setTimeout(()=>{
+
+reject(
+new Error(
+"浏览器读取视频超时，请重新选择一个 MP4、MOV 或 WebM 视频"
+)
+);
+
+},8000);
+
+
+video.addEventListener(
+"loadedmetadata",
+()=>{
+
+clearTimeout(timer);
+
+resolve();
+
+},
+{once:true}
+);
+
+}
+);
+
+
+if(
+!video.duration ||
+!isFinite(video.duration)
+){
+
+throw new Error(
+"浏览器无法读取这个视频，请换一个 MP4、MOV 或 WebM 文件"
+);
+
+}
+
+
+if(video.duration>120){
+
+throw new Error(
+"当前版本单次分析限制120秒，请剪成30–90秒的代表性视频再分析"
+);
+
+}
+
+
+status.textContent=
+"正在准备视频分析模型……";
+
+
+const canUsePose=
+await initPose();
+
+
+let detected=0;
+
+let totalMove=0;
+
+let previousCenter=null;
+
+let kneeTotal=0;
+
+let kneeCount=0;
+
+let upperCount=0;
+
+
+const samples=
+canUsePose
+?
+Math.min(
+50,
+Math.max(
+12,
+Math.floor(video.duration/.8)
+)
+)
+:
+0;
+
+
+/* =========================
+   姿态分析
+========================= */
+
+for(
+let i=0;
+i<samples;
+i++
+){
+
+lastPose=null;
+
+
+const time=
+video.duration*
+(
+i/(samples-1)
+);
+
+
+await seekVideo(time);
+
+
+try{
+
+if(pose){
+
+await pose.send({
+image:video
+});
+
+}
+
+}catch(frameError){
+
+/*
+单帧失败不能让整个视频失败。
+*/
+
+lastPose=null;
+
+}
+
+
+const points=
+choosePose(
+lastPose
+?
+[lastPose]
+:
+[],
+document.getElementById(
+"playerMode"
+).value
+);
+
+
+if(points){
+
+detected++;
+
+
+const center={
+
+x:
+(points[23].x+
+points[24].x)/2,
+
+y:
+(points[23].y+
+points[24].y)/2
+
+};
+
+
+const scale=
+bodyScale(points);
+
+
+if(previousCenter){
+
+totalMove+=
+dist(center,previousCenter)/
+scale;
+
+}
+
+
+previousCenter=center;
+
+
+const leftKnee=
+angle(
+points[23],
+points[25],
+points[27]
+);
+
+
+const rightKnee=
+angle(
+points[24],
+points[26],
+points[28]
+);
+
+
+kneeTotal+=
+(
+leftKnee+
+rightKnee
+)/2;
+
+
+kneeCount++;
+
+
+const leftElbow=
+angle(
+points[11],
+points[13],
+points[15]
+);
+
+
+const rightElbow=
+angle(
+points[12],
+points[14],
+points[16]
+);
+
+
+if(
+points[15].y<
+points[11].y-.02 &&
+leftElbow>35 &&
+leftElbow<175
+){
+
+upperCount++;
+
+}
+
+
+if(
+points[16].y<
+points[12].y-.02 &&
+rightElbow>35 &&
+rightElbow<175
+){
+
+upperCount++;
+
+}
+
+}
+
+
+bar.style.width=
+Math.round(
+(i+1)/samples*100
+)+"%";
+
+
+status.textContent=
+`AI 正在分析：${i+1}/${samples}`;
+
+
+await new Promise(
+resolve=>setTimeout(resolve,0)
+);
+
+}
+
+
+/* =========================
+   生成指标
+========================= */
+
+let metrics;
+
+let mode="姿态AI";
+
+
+if(
+canUsePose &&
+detected>0
+){
+
+const coverage=
+detected/samples;
+
+
+const mobility=
+totalMove/detected;
+
+
+const ready=
+kneeCount
+?
+Math.max(
+0,
+Math.min(
+100,
+100-
+Math.abs(
+kneeTotal/kneeCount-145
+)*1.8
+)
+)
+:
+50;
+
+
+const upper=
+detected
+?
+upperCount/detected*100
+:
+0;
+
+
+metrics={
+
+coverage,
+
+mobility,
+
+ready,
+
+upper
+
+};
+
+
+}else{
+
+
+const basic=
+await fallbackMotion();
+
+
+mode="基础视觉分析";
+
+
+metrics={
+
+coverage:0,
+
+mobility:
+basic.energy*8,
+
+ready:50,
+
+upper:0
+
+};
+
+}
+
+
+/* =========================
+   等级
+========================= */
+
+const level=
+levelFrom(metrics);
+
+
+const match=
+document.getElementById(
+"matchType"
+).value==="singles"
+?
+"单打"
+:
+"双打";
+
+
+const confidence=
+mode==="姿态AI"
+?
+level.confidence
+:
+Math.min(
+level.confidence,
+55
+);
+
+
+let levelDescription="";
+
+
+if(level.level<=2){
+
+levelDescription="基础入门区间";
+
+}else if(level.level===3){
+
+levelDescription="中羽3级附近";
+
+}else if(level.level===4){
+
+levelDescription="中羽4级附近";
+
+}else if(level.level===5){
+
+levelDescription="中羽5级附近";
+
+}else if(level.level===6){
+
+levelDescription="中羽6级附近";
+
+}else if(level.level===7){
+
+levelDescription="中羽7级附近";
+
+}else{
+
+levelDescription="较高水平区间";
+
+}
+
+
+/* =========================
+   重要：
+   永远保证 note 有值
+========================= */
+
+let note="";
+
+
+if(mode==="姿态AI"){
+
+note=
+"已使用浏览器本地人体姿态模型分析移动和身体姿态线索。";
+
+}else{
+
+note=
+"姿态模型当前不可用，已经自动切换为基础视频运动量分析，因此本次中羽等级置信度较低。";
+
+}
+
+
+if(!note){
+
+note="视频分析完成。";
+
+}
+
+
+/* =========================
+   输出结果
+========================= */
+
+output.innerHTML=`
+
+<div class="answer">
+
+<div class="level-card">
+
+<div class="level-big">
+
+中羽${level.level}
+
+</div>
+
+<div>
+
+<h3 style="margin:0">
+
+${levelDescription}
+
+</h3>
+
+<div class="small">
+
+${esc(match)}
+·
+置信度 ${confidence}%
+·
+${esc(mode)}
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="metrics">
+
+<div class="metric">
+
+<strong>
+
+${
+mode==="姿态AI"
+?
+Math.round(metrics.coverage*100)+"%"
+:
+"—"
+}
+
+</strong>
+
+<small>
+人体识别覆盖
+</small>
+
+</div>
+
+
+<div class="metric">
+
+<strong>
+
+${metrics.mobility.toFixed(2)}
+
+</strong>
+
+<small>
+归一化移动量
+</small>
+
+</div>
+
+
+<div class="metric">
+
+<strong>
+
+${Math.round(metrics.ready)}
+
+</strong>
+
+<small>
+准备姿态线索
+</small>
+
+</div>
+
+
+<div class="metric">
+
+<strong>
+
+${Math.round(metrics.upper)}%
+
+</strong>
+
+<small>
+上肢高举线索
+</small>
+
+</div>
+
+</div>
+
+
+<div class="answer-section">
+
+<strong>
+🏸 AI观察
+</strong>
+
+<ul>
+
+<li>
+
+${
+metrics.mobility<1.8
+?
+"移动幅度偏小，建议重点检查启动、回中心和最后一步制动。"
+:
+"视频中的移动量比较明显，可以进一步结合击球质量和战术执行判断。"
+}
+
+</li>
+
+
+<li>
+
+${
+metrics.ready<55
+?
+"准备姿态线索偏弱，注意屈膝、重心和随时启动的准备姿态。"
+:
+"准备姿态线索整体正常，可以继续观察疲劳以后是否发生变化。"
+}
+
+</li>
+
+
+<li>
+
+中羽等级不能仅靠姿态模型确定。握拍、球速、落点、击球质量和正式比赛成绩需要其他证据。
+
+</li>
+
+</ul>
+
+</div>
+
+
+<div class="${
+mode==="姿态AI"
+?
+"ok"
+:
+"notice"
+}">
+
+${esc(note)}
+
+</div>
+
+
+<div class="notice">
+
+⚠️ 本次结果属于羽智的训练参考估算，不是中羽官方认证。
+如果想进一步提高等级判断准确度，后续还可以加入球场线检测、羽球飞行轨迹、击球事件识别、落点分析和长期比赛成绩。
+
+</div>
+
+
+</div>
+
+`;
+
+
+/* =========================
+   保存视频记录
+========================= */
+
+let videos=[];
+
+
+try{
+
+videos=
+JSON.parse(
+localStorage.getItem(
+"videoAnalyses"
+)||"[]"
+);
+
+if(!Array.isArray(videos)){
+
+videos=[];
+
+}
+
+}catch(error){
+
+videos=[];
+
+}
+
+
+videos.unshift({
+
+time:
+new Date().toLocaleString(),
+
+name:
+videoFile.name,
+
+level:
+level.level,
+
+confidence:
+confidence,
+
+match:
+match,
+
+mode:
+mode
+
+});
+
+
+localStorage.setItem(
+"videoAnalyses",
+JSON.stringify(
+videos.slice(0,20)
+)
+);
+
+
+status.textContent=
+"分析完成，结果已经保存到“我的羽球”。";
+
+
+toast("视频分析完成");
+
+
+}catch(error){
+
+
+/* =========================
+   彻底解决 undefined
+========================= */
+
+let errorMessage="";
+
+
+if(
+error &&
+typeof error.message==="string" &&
+error.message.trim()
+){
+
+errorMessage=error.message.trim();
+
+}else if(
+typeof error==="string" &&
+error.trim()
+){
+
+errorMessage=error.trim();
+
+}else{
+
+errorMessage=
+"视频分析过程中出现未知浏览器错误";
+
+}
+
+
+status.textContent=
+"分析失败：" + errorMessage;
+
+
+output.innerHTML=`
+
+<div class="notice">
+
+<strong>
+视频分析没有完成
+</strong>
+
+<br>
+<br>
+
+${esc(errorMessage)}
+
+<br>
+<br>
+
+如果你使用的是 iPhone：
+
+<br>
+
+1. 建议横屏拍摄。
+
+<br>
+
+2. 尽量固定手机。
+
+<br>
+
+3. 使用30–90秒视频。
+
+<br>
+
+4. 尽量使用MP4或MOV。
+
+<br>
+
+5. 确保画面能看到完整球场和目标球员。
+
+<br>
+
+6. 如果姿态模型暂时无法加载，羽智会自动尝试基础视觉分析。
+
+</div>
+
+`;
+
+
+toast(
+"视频分析没有完成，但页面没有崩溃"
+);
+
+
+}finally{
+
+analyzeBtn.disabled=!videoFile;
+
+}
+
+}
+
+
+window.analyzeVideo=analyzeVideo;
+
+
+/* =========================
+   我的羽球
+========================= */
+
+function renderRecords(){
+
+const box=
+document.getElementById("records");
+
+
+let reviews=[];
+
+let videos=[];
+
+
+try{
+
+reviews=
+JSON.parse(
+localStorage.getItem(
+"badmintonReviews"
+)||"[]"
+);
+
+if(!Array.isArray(reviews)){
+
+reviews=[];
+
+}
+
+}catch(error){
+
+reviews=[];
+
+}
+
+
+try{
+
+videos=
+JSON.parse(
+localStorage.getItem(
+"videoAnalyses"
+)||"[]"
+);
+
+if(!Array.isArray(videos)){
+
+videos=[];
+
+}
+
+}catch(error){
+
+videos=[];
+
+}
+
+
+if(
+!reviews.length &&
+!videos.length
+){
+
+box.innerHTML=`
+
+<div class="empty">
+
+还没有记录。
+
+<br>
+
+去“比赛复盘”或者“视频AI”开始第一次记录。
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+let html="";
+
+
+reviews.forEach(review=>{
+
+html+=`
+
+<div class="record">
+
+<div class="record-number">
+📋
+</div>
+
+<div>
+
+<strong>
+${esc(review.time)}
+</strong>
+
+<p>
+
+${esc(review.score||"")}
+
+${esc(review.result||"")}
+
+·
+
+${esc(review.type||"")}
+
+</p>
+
+<p>
+${esc(review.text)}
+</p>
+
+<div class="ok">
+
+<strong>
+训练重点：
+</strong>
+
+${esc(review.focus)}
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+
+videos.forEach(videoRecord=>{
+
+html+=`
+
+<div class="record">
+
+<div class="record-number">
+🎥
+</div>
+
+<div>
+
+<strong>
+${esc(videoRecord.time)}
+</strong>
+
+<p>
+
+${esc(videoRecord.name)}
+
+·
+
+中羽${esc(videoRecord.level)}
+
+·
+
+${esc(videoRecord.confidence)}%
+
+·
+
+${esc(videoRecord.mode)}
+
+</p>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+
+box.innerHTML=html;
+
+}
+
+
+/* =========================
+   清空记录
+========================= */
+
+function clearRecords(){
+
+if(
+!confirm(
+"确定要清空本机保存的比赛复盘和视频记录吗？"
+)
+){
+
+return;
+
+}
+
+
+localStorage.removeItem(
+"badmintonReviews"
+);
+
+localStorage.removeItem(
+"videoAnalyses"
+);
+
+
+renderRecords();
+
+
+toast("记录已经清空");
+
+}
+
+
+window.clearRecords=clearRecords;
+
+
+/* =========================
+   初始化
+========================= */
+
+renderRecords();
+
+showPage("home");
+
 </script>
+
 </body>
 </html>
