@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="羽智｜AI羽毛球助手。训练计划、比赛复盘、羽球记录。">
+<meta name="keywords" content="羽毛球,AI教练,羽毛球训练,比赛复盘,羽智">
+<title>羽智｜AI羽毛球助手</title>
+<style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#07110c;color:#f5f7f3;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+button,select,textarea{font:inherit}button{cursor:pointer}header{height:72px;padding:0 6vw;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff12;position:sticky;top:0;z-index:10;background:#07110cd9;backdrop-filter:blur(18px)}
+.logo{font-size:20px;font-weight:800;display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none}.logo span{display:grid;place-items:center;width:35px;height:35px;border-radius:11px;background:#d8ff4f;color:#08100a}
+nav{display:flex;gap:6px}nav button{border:0;background:transparent;color:#87968d;padding:10px 14px;border-radius:10px}nav button:hover,nav button.active{color:#fff;background:#ffffff0f}
+.profile{border:1px solid #d8ff4f59;color:#d8ff4f;background:transparent;border-radius:10px;padding:9px 14px}
+.hero{max-width:1050px;margin:auto;text-align:center;padding:115px 20px 100px;background:radial-gradient(circle at 50% 35%,#93ff3f17,transparent 35%)}
+.badge{display:inline-block;color:#b7ccbc;font-size:11px;letter-spacing:2px;border:1px solid #d8ff4f38;padding:8px 12px;border-radius:999px}.hero h1{font-size:clamp(50px,8vw,88px);line-height:1.08;letter-spacing:-5px;margin:24px 0}.hero h1 em{font-style:normal;color:#d8ff4f}.hero p{color:#8d9b91;line-height:1.9;font-size:17px}
+.hero-actions{display:flex;justify-content:center;gap:12px;margin-top:32px}.primary{background:#d8ff4f;color:#0b130b;border:0;border-radius:12px;padding:14px 20px;font-weight:800}.ghost{background:#ffffff0a;color:#d7ded9;border:1px solid #ffffff1a;border-radius:12px;padding:14px 20px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);max-width:650px;margin:85px auto 0;border-top:1px solid #ffffff12;border-bottom:1px solid #ffffff12}.stats div{padding:22px}.stats strong{display:block;color:#d8ff4f;font-size:25px}.stats span{display:block;color:#7e8c83;font-size:12px;margin-top:5px}
+.panel{max-width:850px;margin:70px auto 100px;padding:0 20px}.section-head small,.vision small{color:#a8c64d;font-size:11px;letter-spacing:2px;font-weight:800}.section-head h2,.vision h2{font-size:42px;letter-spacing:-2px;margin:12px 0}.section-head p{color:#849187}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:35px 0 15px}.form-grid label{font-size:12px;color:#87948b}.form-grid select{display:block;width:100%;margin-top:8px;padding:13px;border:1px solid #ffffff1a;border-radius:11px;background:#111c15;color:#e8eee9;outline:0}.wide{width:100%;margin-top:12px}
+.result,.review-card,.profile-card{margin-top:25px;border:1px solid #ffffff14;background:#ffffff06;border-radius:18px;padding:20px}.result-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.result-title small{color:#76847b}.plan-row{display:flex;align-items:center;gap:15px;padding:16px 0;border-top:1px solid #ffffff0f}.plan-row>b{color:#80917f;font-size:12px}.plan-row div{flex:1}.plan-row p{margin:4px 0 0;color:#8b988f;font-size:13px}.plan-row>span{color:#b3c0b5;font-size:12px}
+.big-input{width:100%;min-height:190px;resize:vertical;background:#0e1912;color:#edf2ed;border:1px solid #ffffff1a;border-radius:15px;padding:17px;outline:0;margin-top:25px;line-height:1.7}.big-input::placeholder{color:#5f6e63}.review-card p{color:#aeb9b0;line-height:1.8}.ai-label{color:#d8ff4f;font-size:12px;font-weight:800}
+.profile-card{display:flex;align-items:center;gap:15px}.avatar{width:50px;height:50px;border-radius:15px;display:grid;place-items:center;background:#d8ff4f}.profile-card p{color:#87958c;font-size:13px}.subhead{margin-top:40px}.empty{padding:35px;text-align:center;color:#68766d;border:1px dashed #ffffff1a;border-radius:15px}.record{border-top:1px solid #ffffff12;padding:15px 0}.record small{color:#718077}.record p{color:#b6c0b8;line-height:1.7}
+.vision{max-width:1050px;margin:0 auto 100px;padding:55px 30px;border-top:1px solid #ffffff12}.vision h2{max-width:650px}.vision-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:35px}.vision-grid div{padding:23px;border-radius:15px;background:#ffffff06;border:1px solid #ffffff12}.vision-grid b{display:block;color:#a8c64d;font-size:11px}.vision-grid strong{display:block;margin:20px 0 8px}.vision-grid p{color:#7f8c83;font-size:13px;line-height:1.7}
+footer{text-align:center;color:#4f5c53;font-size:12px;padding:30px}@media(max-width:700px){header{padding:0 15px}nav{display:none}.hero{padding:80px 18px}.hero h1{letter-spacing:-3px}.hero-actions{flex-direction:column}.stats{margin-top:60px}.stats div{padding:16px 5px}.form-grid,.vision-grid{grid-template-columns:1fr}.section-head h2,.vision h2{font-size:34px}.panel{margin-top:45px}.vision{padding:35px 20px}}
+</style>
+</head>
+<body>
+<header><a class="logo" href="#top"><span>羽</span>羽智</a>
+<nav><button onclick="show('home')">首页</button><button onclick="show('plan')">AI训练</button><button onclick="show('review')">比赛复盘</button><button onclick="show('record')">我的记录</button></nav>
+<button class="profile" onclick="show('record')">我的羽球</button></header>
+<main id="top">
+<section id="home" class="hero page"><div class="badge">🏸 AI BADMINTON COACH</div><h1>打得更聪明，<br><em>进步得更快。</em></h1><p>羽智是一位属于你的 AI 羽毛球教练。<br>帮你训练、复盘、记录每一次进步。</p><div class="hero-actions"><button class="primary" onclick="show('plan')">开始我的训练 →</button><button class="ghost" onclick="show('review')">复盘一场比赛</button></div><div class="stats"><div><strong>01</strong><span>AI训练计划</span></div><div><strong>02</strong><span>比赛复盘</span></div><div><strong>03</strong><span>成长记录</span></div></div></section>
+
+<section id="plan" class="panel page" style="display:none"><div class="section-head"><small>AI COACH</small><h2>制定今天的训练</h2><p>告诉羽智你的情况，它会给你一个可执行的训练方案。</p></div><div class="form-grid"><label>你的水平<select id="level"><option>新手</option><option>业余初级</option><option selected>业余中级</option><option>业余中高级</option></select></label><label>训练目标<select id="goal"><option selected>提升双打能力</option><option>提升单打能力</option><option>加强反手</option><option>加强步法</option><option>提升体能</option></select></label><label>今天有多少时间？<select id="time"><option>30</option><option selected>60</option><option>90</option><option>120</option></select></label></div><button class="primary wide" onclick="makePlan()">让 AI 制定训练计划 →</button><div id="planResult"></div></section>
+
+<section id="review" class="panel page" style="display:none"><div class="section-head"><small>MATCH REVIEW</small><h2>复盘你刚打完的一场球</h2><p>先用文字记录。以后我们会加入 AI 视频分析。</p></div><textarea id="match" class="big-input" placeholder="例如：今天双打 18:21 输了。前半场接发不错，后半场连续丢分；杀球很多，但回位慢……"></textarea><button class="primary wide" onclick="saveMatch()">AI 帮我分析 →</button><div id="reviewResult"></div></section>
+
+<section id="record" class="panel page" style="display:none"><div class="section-head"><small>MY BADMINTON</small><h2>我的羽球记录</h2><p>现在先保存在浏览器里，后续再接账号和云端数据库。</p></div><div class="profile-card"><div class="avatar">🏸</div><div><strong>我的羽球档案</strong><p>这是你的第一版羽球主页。</p></div></div><h3 class="subhead">比赛记录</h3><div id="records" class="empty">还没有记录。打完下一场球，就来这里记一下。</div></section>
+
+<section class="vision"><small>下一阶段</small><h2>以后，我们让它真正“懂”你的球。</h2><div class="vision-grid"><div><b>01</b><strong>AI视频动作分析</strong><p>上传杀球、步法视频，分析动作与击球点。</p></div><div><b>02</b><strong>球友匹配</strong><p>找到水平、时间和位置都合适的球友。</p></div><div><b>03</b><strong>球馆与赛事</strong><p>从训练工具逐步变成真正的羽球社区。</p></div></div></section>
+</main><footer>羽智 · AI 羽毛球助手 · ypwthv.xyz</footer>
+<script>
+const ids=["home","plan","review","record"];
+function show(id){ids.forEach(x=>document.getElementById(x).style.display=x===id?"":"none");scrollTo({top:0,behavior:"smooth"})}
+function makePlan(){let l=level.value,g=goal.value,t=time.value;planResult.innerHTML=`<div class="result"><div class="result-title"><span>今日训练</span><small>${l} · ${g} · ${t}分钟</small></div>${[["热身","动态拉伸 + 小步跑","10 分钟"],["步法","六点步法移动，重点练启动","15 分钟"],["反手","高远球反手动作分解","15 分钟"],["多球","正反手交替 + 网前","15 分钟"],["放松","腿部与肩部拉伸","5 分钟"]].map((x,i)=>`<div class="plan-row"><b>0${i+1}</b><div><strong>${x[0]}</strong><p>${x[1]}</p></div><span>${x[2]}</span></div>`).join("")}</div>`}
+function saveMatch(){let v=match.value.trim();if(!v)return;reviewResult.innerHTML=`<div class="review-card"><div class="ai-label">✦ 羽智分析</div><p>从你的比赛记录来看，先关注非受迫失误和关键分处理。建议下一次训练加入：接发球前三拍、双打轮转、连续进攻后的回位。记录更多比赛后，羽智可以进一步找出你的长期弱项。</p></div>`;let arr=JSON.parse(localStorage.getItem("ypwthv_records")||"[]");arr.unshift({date:new Date().toLocaleDateString("zh-CN"),text:v});localStorage.setItem("ypwthv_records",JSON.stringify(arr));renderRecords();match.value=""}
+function renderRecords(){let a=JSON.parse(localStorage.getItem("ypwthv_records")||"[]");records.className=a.length?"":"empty";records.innerHTML=a.length?a.map(r=>`<div class="record"><small>${r.date}</small><p>${r.text}</p></div>`).join(""):"还没有记录。打完下一场球，就来这里记一下。"}
+renderRecords();
+</script>
+</body></html>
